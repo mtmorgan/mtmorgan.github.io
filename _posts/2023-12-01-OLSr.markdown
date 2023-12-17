@@ -1,0 +1,18 @@
+---
+layout: post
+title:  "Ontology lookup with OLSr"
+date:   2023-12-01 09:57:26 -0500
+categories: software update
+---
+
+[OLSr][] (GitHub) provides *R* access to the EMBL-EBI [Ontology Lookup
+Service][OLS]. Probably a more effective contribution would have
+provided improvements to the [rols][] *Bioconductor* package, but I
+wanted to explore a 'tibble' representation (rather than the more
+formal S4 classes used by *rols*) emphasizing local caching and
+memoization to enhance performance and robustness of RESTful client
+implementations.
+
+[OLSr]: https://mtmorgan.github.io/OLSr/
+[OLS]: https://www.ebi.ac.uk/ols4
+[rols]: https://bioconductor.org/packages/rols
