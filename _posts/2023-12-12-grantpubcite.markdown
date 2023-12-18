@@ -5,11 +5,14 @@ date:   2023-12-12 09:57:26 -0500
 categories: software update
 ---
 
+[https://mtmorgan.github.io/grantpubcite/][grantpubcite]<br />
+[https://mtmorgan.github.io/pmcbioc/][pmcbioc]
+
 Two recent packages focus on publication metrics related to scientific
 software projects. 
 
-The [grantpubcite][] (GitHub) package grew out of an interested in how
-federally-funded scientific grants translate into publications and
+The 'grantpubcite' (GitHub-only) package grew out of an interested in
+how federally-funded scientific grants translate into publications and
 citations, particularly in National Institutes of Health programs
 emphasizing software development. The package uses NIH Reporter for
 grant information, and iCite to summarize citations. The package can
@@ -19,7 +22,7 @@ fostered at the level of funding programs. The package served to
 introduce me to basic network visualizations, and bibliometric
 analysis.
 
-The [pmcbioc][] (GitHub) package focuses on the 74,000+ papers citing
+The 'pmcbioc' (GitHub-only) package focuses on the 74,000+ papers citing
 'Bioconductor' in PubMedCentral, for instance identifying common key
 words and journals as proxies for areas where *Bioconductor* has
 particular impact.

@@ -5,8 +5,10 @@ date:   2023-12-14 09:57:26 -0500
 categories: software update
 ---
 
-[rjsoncons][] ([CRAN][rjsoncons-cran]) wraps the [jsoncons][] C++
-library for querying and manipulating JSON objects. The package
+[https://mtmorgan.github.io/rjsoncons/][rjsoncons]
+
+The 'rjsoncons' [CRAN][rjsoncons-cran] package wraps the [jsoncons][]
+C++ library for querying and manipulating JSON objects. The package
 exposes `jmsepath()` and `jsonpath()` to the user. The package
 implements an internal parser from JSON to *R*. The package exposes
 the header-only jsoncons library, so other developers can leverage
