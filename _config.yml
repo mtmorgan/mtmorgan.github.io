@@ -22,10 +22,8 @@ title: Martin Morgan
 email: mtmorgan.xyz@gmail.com
 description: >- # this means to ignore newlines until "baseurl:"
   Martin Morgan is an accomplished bioinformatics leader with special
-  expertise in R. Martin led the Bioconductor project
-  (https://bioconductor.org) from 2009 to 2021. Martin originally
-  trained as a biologist interested in the evolution of plant
-  reproductive morphology.
+  expertise in R. Martin originally trained as a biologist interested
+  in the evolution of plant reproductive morphology.
 baseurl: "" # the subpath of your site, e.g. /blog
 url: "https://mtmorgan.github.iio" # the base hostname & protocol for your site, e.g. http://example.com
 github_username:  mtmorgan
