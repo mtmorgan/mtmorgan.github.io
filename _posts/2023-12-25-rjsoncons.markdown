@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "rjsoncons for JSON manipulation"
-date:   2023-12-25 09:57:26 -0500
+date:   2024-01-01 09:57:26 -0500
 categories: software update
 ---
 
@@ -22,8 +22,12 @@ Version 1.1.0 updated the jsoncons library.
 
 The current 'devel' version:
 
-- Implements `jsonpivot()` for transformaing array-of-objects to *R*
-  `data.frame()`.
+- Implements `j_query()` to auto-detect query syntax (JSONpointer,
+  JSONpath, JMESpath).
+- Implement `j_pivot()` to pivot a JSON array-of-objects to R-friendly
+  object-of-arrays, with optional import as a `data.frame` or
+  `tibble`. This was named `jsonpivot()` in an earlier development
+  version.
 - Implements `jsonpointer()` for extracting elements using JSON
   Pointer.
 - Updates the jsoncons library to 0.173.2 to avoid dependency on C++ 14.
