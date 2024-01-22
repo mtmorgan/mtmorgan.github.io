@@ -5,6 +5,8 @@ date:   2024-01-19
 categories: software update
 ---
 
+<https://mtmorgan.github.io/cellxgenedp>
+
 A post on Chan-Zuckerberg slack channel `#cellxgene-users` inspired
 some additional work on the [cellxgenedp][] package. The question was
 
