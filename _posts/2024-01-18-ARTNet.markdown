@@ -1,0 +1,48 @@
+---
+layout: post
+title:  "ARTNet - PSRC Short Talk: Bioconductor: Overview and Recent Developments"
+date:   2024-01-18
+categories: talk
+---
+
+This [short presentation][artnet] introduces *Bioconductor*. It
+outlines some of the challenges / opportunities facing the project,
+including cloud computing, python interoperability, and AI. A short
+section outlines my own work on data discovery using [cellxgenedp][]
+and the [ontology manipulation using OLSr][OLSr].
+
+I took a stab at trying to identify new (in the last release) relevant
+packages; this was not very successful because it was (a) difficult to
+winnow the new packages to relevant packages and (b) even more
+difficult to assess which packages *were going to be important*. For
+the later, it might be an interesting exercise to track the download
+statistics of each package as it ages; this data could be obtained
+from the (e.g.,
+<https://bioconductor.org/packages/release/bioc/VIEWS>) file, and from
+[package download statistics][downloads] without too much difficulty.
+
+One package catching my own attention was [simona][] for semantic
+similarity in bio-ontologies, by Zuguang Gu. It imports (via a Java
+library) diverse ontology formats, computes many similarity metrics,
+and incldues visualization functions for both small and large
+ontologies. Definitely worth checking out further.
+
+Writing the slides, I revisted the [talk and short course
+material][XM2023] and [slides][XM2023-slides] produced for XM2023, the
+Brazilian Association for Bioinformatics and Computational Biology. I
+also revisited the one-page '[cheat sheet][]' for a 2-hour workshop /
+introduction from several years ago; the cheat sheet approach seems
+pretty interesting for this sort of short hands-on introduction.
+
+
+[artnet]: https://bit.ly/47Dlqsx
+[cellxgenedp]: https://mtmorgan.github.io/cellxgenedp
+[OLSr]: https://mtmorgan.github.io/OLSr/articles/b_case_study_cxg.html
+
+[downloads]: https://bioconductor.org/packages/stats/bioc/bioc_pkg_stats.tab
+
+[simona]: https://bioconductor.org/packages/simona
+
+[XM2023]: https://bit.ly/3p1SE4J
+[XM2023-slides]: https://bit.ly/3PbX03F
+[cheat sheet]: https://bit.ly/2qViOb0
