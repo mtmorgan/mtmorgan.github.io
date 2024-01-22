@@ -129,3 +129,4 @@ not clever enough with C++...
 [duckdb]: https://duckdb.org/2023/03/03/json.html
 [github]: https://duckdb.org/2023/03/03/json.html#github-archive-examples
 [gzstream]: https://www.cs.unc.edu/Research/compgeom/gzstream/
+[cpp11]: https://cpp11.r-lib.org/
