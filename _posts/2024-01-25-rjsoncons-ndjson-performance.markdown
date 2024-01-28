@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Improving NDJSON parsing performance"
+title:  "Improving NDJSON performance"
 date:   2024-01-25
 categories: software update
 ---
