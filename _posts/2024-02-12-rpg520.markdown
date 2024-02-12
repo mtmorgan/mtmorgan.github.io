@@ -1,0 +1,20 @@
+---
+layout: post
+title:  "RPG520 Workshop"
+date:   2024-02-12
+categories: workshop
+---
+
+<https://mtmorgan.github.io/RPG520>
+
+This three-day workshop introduces *R* (mostly) and *Bioconductor* for
+working with data. It is part of the Roswell Park graduate course
+'Principles of Computational Oncology'. The course uses the University
+at Buffalo CCR cluster, introducing participants to the primary
+computational resource available outside personal laptops. Day 1
+provides a basic introduction to *R*, *RStudio*, and packages. Day 2
+walks through a couple of case studies illustrating *R* use of data
+management, exploratory analysis, and visualization. Day 3 focuses on
+working with scRNASeq data (at a high level -- producing an
+interactive UMAP plot from pre-computed values), as well as a look at
+survival analysis.
