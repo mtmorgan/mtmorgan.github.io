@@ -11,7 +11,7 @@ an *R* interface to the [jsoncons][] library.
 
 I want to support input from many different source -- files,
 compressed files, URLs, etc. *R* provides support for these via it's
-'connetions' interface, `?connection`. On the other hand, jsoncons
+'connections' interface, `?connection`. On the other hand, jsoncons
 like many C++ programs interfaces with iostreams.
 
 The *C* interface to connections is not part of *R*'s public API, and
@@ -37,7 +37,7 @@ close(con)
 
 ## *C++* class
 
-For the *C++* code, start by including relavant header files
+For the *C++* code, start by including relevant header files
 
 ```{c++}
 #include <streambuf>
@@ -93,6 +93,9 @@ skeleton of this function is
             // Tell the base class about the buffer
             this->setg(buf_, buf_, buf_ + chunk_len);
         }
+        return this->gptr() == this->egptr() ?
+            std::char_traits<char>::eof() :
+            std::char_traits<char>::to_int_type(*this->gptr());
     }
 ```
 
@@ -115,14 +118,17 @@ the additional lines of code
             // to worry about R's garbage collection
             R_xlen_t chunk_len = Rf_xlength(chunk);
             std::copy(RAW(chunk), RAW(chunk) + chunk_len, buf_);
+            // update the streambuf pointers to our buffer
             this->setg(buf_, buf_, buf_ + chunk_len);
         }
     }
 ```
 
-`setg()` sets the points to our buffer. If `read_bin()` returns no
-values, then `chunk_len` is 0 and `setg()` sets the current location
-`gptr()` to the end location `egptr()`.
+`setg()` sets the start and current pointers to the start of our
+buffer, and the end-of-buffer pointer to one past the last byte we've
+read. If `read_bin()` returns no values, then `chunk_len` is 0 and
+`setg()` sets the current location `gptr()` to the end location
+`egptr()`.
 
 The return value of `underflow()` is either end-of-file (if even after
 update the current and end pointers are the same) or the value pointed
@@ -187,7 +193,7 @@ number of lines in a connection.
 
 Start by including relevant headers -- iostream so that we can use our
 buffer in an input stream, cpp11/declarations.hpp to so that the *C++*
-function definition is exposed as an *R* funtion, and our
+function definition is exposed as an *R* function, and our
 connectionbuf.hpp header file.
 
 ```{c++}
