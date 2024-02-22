@@ -14,13 +14,12 @@ compressed files, URLs, etc. *R* provides support for these via it's
 'connections' interface, `?connection`. On the other hand, jsoncons
 like many C++ programs interfaces with iostreams.
 
-The *C* interface to connections is not part of *R*'s public API, and
-anyway the interface is in *C* rather than *C++*. My approach (1)
-takes inspiration from the [readr][readr-readBin] package to invoke
-the *R*-level `readBin()` from C++ using the [cpp11][] *R* package;
-and (2) implements a streambuf subclass as outlined in a very helpful
-StackOverflow [comment][SO-comment]. These actually come together
-quite nicely.
+The *C* interface to connections is not part of *R*'s public API. My
+approach (1) takes inspiration from the [readr][readr-readBin] package
+to invoke the *R*-level `readBin()` from C++ using the [cpp11][] *R*
+package; and (2) implements a streambuf subclass as outlined in a very
+helpful StackOverflow [comment][SO-comment]. These actually come
+together quite nicely.
 
 ## *R* script
 
@@ -30,7 +29,7 @@ will be used to read binary data from the connection in chunks of
 about 4 Mb), and finally close the connection.
 
 ```{r}
-con <- gzfile("some_file.json", "wb")
+con <- gzfile("some_file.json.gz", "rb")
 result <- cpp_fun(con, 2^22)
 close(con)
 ```
@@ -44,10 +43,10 @@ For the *C++* code, start by including relevant header files
 #include <cpp11.hpp>
 ```
 
-Create a `connectionbuf` subclass of `std::streambuf`
+Create a `readbinbuf` subclass of `std::streambuf`
 
 ```{c++}
-class connectionbuf : public std::streambuf {
+class readbinbuf : public std::streambuf {
 ```
 
 Create a static inline C++ variable that represents the call to *R*'s
@@ -71,13 +70,13 @@ buffer to store results. The destructor frees the buffer.
 
 ```{c++}
   public:
-    connectionbuf(const cpp11::sexp& con, const int n_bytes)
+    readbinbuf(const cpp11::sexp& con, const int n_bytes)
       : con_(con), n_bytes_(n_bytes)
         {
             buf_ = new char[n_bytes_];
         }
 
-    ~connectionbuf() { delete this->buf_; }
+    ~readbinbuf() { delete buf_; }
 ```
 
 Implementing a subclass of `std::streambuf` for an input stream
@@ -88,20 +87,20 @@ skeleton of this function is
 
 ```{c++}
     int underflow() {
-        if (this->gptr() == this->egptr()) {
+        if (gptr() == egptr()) {
             // Populate buf_ with the results of a call to read_bin()
             // Tell the base class about the buffer
-            this->setg(buf_, buf_, buf_ + chunk_len);
+            setg(buf_, buf_, buf_ + chunk_len);
         }
-        return this->gptr() == this->egptr() ?
+        return gptr() == egptr() ?
             std::char_traits<char>::eof() :
-            std::char_traits<char>::to_int_type(*this->gptr());
+            std::char_traits<char>::to_int_type(*gptr());
     }
 ```
 
 The basic idea is to register (using `setg()`) with the base class
 pointers to the start `eback()`, current `gptr()`, and end (`egptr()`
-one-after-last) of the buffer maintained by `connectionbuf`. The
+one-after-last) of the buffer maintained by `readbinbuf`. The
 buffer is empty (needs refilling) when the current pointer is equal to
 the end pointer, `gptr() == egptr()`.
 
@@ -111,7 +110,7 @@ the additional lines of code
 
 ```{c++}
     int underflow() {
-        if (this->gptr() == this->egptr()) {
+        if (gptr() == egptr()) {
             // invoke R's readBin() function, asking for up to n_bytes_
             SEXP chunk = read_bin(con_, "raw", n_bytes_);
             // copy the result from the SEXP into buf_, so we do not have
@@ -119,7 +118,7 @@ the additional lines of code
             R_xlen_t chunk_len = Rf_xlength(chunk);
             std::copy(RAW(chunk), RAW(chunk) + chunk_len, buf_);
             // update the streambuf pointers to our buffer
-            this->setg(buf_, buf_, buf_ + chunk_len);
+            setg(buf_, buf_, buf_ + chunk_len);
         }
     }
 ```
@@ -136,26 +135,26 @@ to by the current pointer. The complete function is
 
 ```{c++}
     int underflow() {
-        if (this->gptr() == this->egptr()) {
+        if (gptr() == egptr()) {
             SEXP chunk = read_bin(con_, "raw", n_bytes_);
             R_xlen_t chunk_len = Rf_xlength(chunk);
             std::copy(RAW(chunk), RAW(chunk) + chunk_len, buf_);
-            this->setg(buf_, buf_, buf_ + chunk_len);
+            setg(buf_, buf_, buf_ + chunk_len);
         }
-        return this->gptr() == this->egptr() ?
+        return gptr() == egptr() ?
             std::char_traits<char>::eof() :
-            std::char_traits<char>::to_int_type(*this->gptr());
+            std::char_traits<char>::to_int_type(*gptr());
     }
 };
 ```
 
-Here's a complete header-only definition, e.g., 'connectionbuf.hpp'
+Here's a complete header-only definition, e.g., 'readbinbuf.hpp'
 
 ```{c++}
 #include <streambuf>
 #include <cpp11.hpp>
 
-class connectionbuf : public std::streambuf {
+class readbinbuf : public std::streambuf {
     inline static auto read_bin = cpp11::package("base")["readBin"];
     const cpp11::sexp& con_;
     char *buf_;
@@ -163,24 +162,24 @@ class connectionbuf : public std::streambuf {
 
   public:
 
-    connectionbuf(const cpp11::sexp& con, const int n_bytes)
+    readbinbuf(const cpp11::sexp& con, const int n_bytes)
       : con_(con), n_bytes_(n_bytes)
         {
             buf_ = new char[n_bytes_];
         }
 
-    ~connectionbuf() { delete this->buf_; }
+    ~readbinbuf() { delete buf_; }
 
     int underflow() {
-        if (this->gptr() == this->egptr()) {
+        if (gptr() == egptr()) {
             SEXP chunk = read_bin(con_, "raw", n_bytes_);
             R_xlen_t chunk_len = Rf_xlength(chunk);
             std::copy(RAW(chunk), RAW(chunk) + chunk_len, buf_);
-            this->setg(buf_, buf_, buf_ + chunk_len);
+            setg(buf_, buf_, buf_ + chunk_len);
         }
-        return this->gptr() == this->egptr() ?
+        return gptr() == egptr() ?
             std::char_traits<char>::eof() :
-            std::char_traits<char>::to_int_type(*this->gptr());
+            std::char_traits<char>::to_int_type(*gptr());
     }
 };
 ```
@@ -194,12 +193,12 @@ number of lines in a connection.
 Start by including relevant headers -- iostream so that we can use our
 buffer in an input stream, cpp11/declarations.hpp to so that the *C++*
 function definition is exposed as an *R* function, and our
-connectionbuf.hpp header file.
+readbinbuf.hpp header file.
 
 ```{c++}
 #include <iostream>
 #include <cpp11/declarations.hpp>
-#include "connectionbuf.h"
+#include "readbinbuf.h"
 ```
 
 Create the interface to be exposed to *R*: a function taking a
@@ -211,13 +210,13 @@ lines in the connection.
 int cpp_fun(const cpp11::sexp& con, int n)
 ```
 
-In the body of the function, instantiate our `connectionbuf` class,
+In the body of the function, instantiate our `readbinbuf` class,
 and initialize an input stream that uses our connection buffer as its
 source of input.
 
 ```{c++}
 {
-    connectionbuf cbuf(con, n);
+    readbinbuf cbuf(con, n);
     std::istream in(&cbuf);
 ```
 
@@ -252,12 +251,12 @@ The full implementation is
 ```{c++}
 #include <iostream>
 #include <cpp11/declarations.hpp>
-#include "connectionbuf.h"
+#include "readbinbuf.h"
 
 [[cpp11::register]]
 int cpp_fun(const cpp11::sexp& con, int n)
 {
-    connectionbuf cbuf(con, n);
+    readbinbuf cbuf(con, n);
     std::istream in(&cbuf);
     std::string line;
     int i = 0;
