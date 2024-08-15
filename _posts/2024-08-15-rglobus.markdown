@@ -1,0 +1,25 @@
+---
+layout: post
+title:  "rglobus 0.0.1 GitHub release"
+date:   2024-08-15
+categories: software update
+---
+
+<https://mtmorgan.github.io/rglobus>
+
+The [rglobus][] package has *R* functions to discover [Globus][]
+collections and to initiate and check the status of file and directory
+transfers. Globus is, in part, a cloud-based large file transfer
+service. It is used for instance in the [HuBMAP][] project and the
+HuBMAPR package.
+
+The package is partly an exercise in learning more about [OAuth][]
+authentication, as well as exploring the [httr2][] package. An open
+issue for me is figuring out how to update the scope of an
+authenticated service.
+
+[rglobus]: https://mtmorgan.github.io/rglobus/articles/a_get_started.html
+[Globus]: https://www.globus.org
+[HuBMAP]: https://portal.hubmapconsortium.org/
+[OAuth]: https://mtmorgan.github.io/software/2024/06/20/globus-oauth.html
+[httr2]: https://httr2.r-lib.org/index.html
