@@ -8,7 +8,6 @@ Updated: 16 December, 2023
 
 # Contact information
 
-- Academic: [Martin.Morgan@RoswellPark.org](mailto:Martin.Morgan@RoswellPark.org)
 - Professional: [mtmorgan.xyz@gmail.com](mailto:mtmorgan.xzy@gmail.com)
 - Personal: [martin.t.morgan@gmail.com](mailto:martin.t.morgan@gmail.com)
 
@@ -29,8 +28,8 @@ of bioinformatic tools.
 
 # Academic and professional experience
 
-- Roswell Park Comprehensive Cancer Center, 2015-Present. Current
-  position: Member (Professor)
+- Roswell Park Comprehensive Cancer Center, 2015-Present. Associate,
+  Full, and Emeritus (since August 2024) Professor.
 - Fred Hutchinson Cancer Research Center, 2005-2015.
 - Washington State University, 1996-2005. Assistant and Associate
   (tenured) Professor, School of Biological Sciences.
