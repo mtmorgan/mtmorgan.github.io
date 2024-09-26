@@ -4,7 +4,7 @@ title: CV
 permalink: /cv/
 ---
 
-Updated: 16 December, 2023
+Updated: 22 August, 2024
 
 # Contact information
 
