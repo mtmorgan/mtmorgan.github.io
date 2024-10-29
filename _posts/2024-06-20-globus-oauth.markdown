@@ -5,12 +5,19 @@ date:   2024-06-20
 categories: software
 ---
 
+**Update** 29 October, 2024: Christine Hou has developed [HuBMAPR][];
+it is now available through [Bioconductor][]. Globus functionality is
+in an unpublished GitHub package [rglobus][].
+
+[HuBMAPR]: https://christinehou11.github.io/HuBMAPR
+[Bioconductor]: https://bioconductor.org/packages/HuBMAPR
+[rglobus]: https://mtmorgan.github.io/rglobus
+
 I have been exploring updates to the very preliminary [HuBMAPR][]
 package. Some [HuBMAP][] data is stored on [Globus][], and data access
 requires authentication. This is not something I have implemented
 before, or at least not in a more-or-less careful way.
 
-[HuBMAPR]: https://github.com/mtmorgan/HuBMAPR
 [HuBMAP]: https://portal.hubmapconsortium.org/
 [Globus]: https://app.globus.org
 
