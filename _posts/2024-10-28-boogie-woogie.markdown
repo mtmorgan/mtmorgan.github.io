@@ -108,19 +108,23 @@ entertainment and maybe a bit of education.
 
 ## Notes
 
-Look for a second post shortly. In addition to [p5][], I use the
-[stdlib][] javascript library (to binomial random deviates, and to
-sample the population).  I also needed to learn how to integrate a p5
-canvas into the jekyll static site generator (basically, adding an
-'assets' folder to the root of the site, with javascript scripts and
-libraries, and inserting `<script>` and `<div>` tags into the markdown
-for this page). Here's the Boogie Woogie [javascript][]. Population
-genetics and WSU remind me of Richard Gomulkiewicz, to whom I dedicate
-this post.
+See the companion [Boogie Woogie Bubble][] post.
+
+In addition to [p5][], I use the [stdlib][] javascript library (to
+binomial random deviates, and to sample the population).  I also
+needed to learn how to integrate a p5 canvas into the jekyll static
+site generator (basically, adding an 'assets' folder to the root of
+the site, with javascript scripts and libraries, and inserting
+`<script>` and `<div>` tags into the markdown for this page). Here's
+the Boogie Woogie [javascript][]. 
+
+Population genetics and WSU remind me of Richard Gomulkiewicz, to whom
+I dedicate this post.
 
 [Electric Op]: https://buffaloakg.org/art/exhibitions/electric-op
 [Piet Mondrian exhibit]: https://www.moma.org/calendar/exhibitions/470
 [catalog]: https://assets.moma.org/documents/moma_catalogue_470_300063147.pdf
 [p5]: https://p5js.org/
 [stdlib]: https://stdlib.io/
-[javascript]: https://github.com/mtmorgan/mtmorgan.github.io/assets/p5/boogie-woogie.js
+[Boogie Woogie Bubble]: /population-genetics/javascript/2024/10/29/boogie-woogie-bubble.html
+[javascript]: /assets/p5/boogie-woogie.js
