@@ -43,7 +43,7 @@ individual-based simulations using bubble charts, but then the
 connection to Mondrian would be even less clear). 
 
 Originally I set the maximum bubble diameter to 1/2 the minimum width
-or hieght of the canvas. This meant that new alleles were centered in
+or height of the canvas. This meant that new alleles were centered in
 a two-dimensional square on the canvas. The simulation above sets the
 maximum diameter to the minimum width or height, so when only a single
 allele is present its bubble occupies the entire width or height of
@@ -58,7 +58,7 @@ easier on the eyes and seems to better contrast, in general, with the
 randomly chosen allele colors.
 
 The alleles were originally drawn without an explicit stroke for the
-circumfrence. Drawing the circumfrence provides a more defined shape
+circumference. Drawing the circumference provides a more defined shape
 for the eye to perceive. This is particularly important with partially
 transparent bubbles, and transparent bubbles are needed to visualize
 overlapping alleles.
