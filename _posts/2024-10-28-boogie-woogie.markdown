@@ -5,7 +5,10 @@ date:   2024-10-28
 categories: population-genetics javascript
 ---
 
-The Buffalo AKG [Electric Op][] exhibit reminded me of an old folly. 
+(updated 2024-11-14)
+
+The Buffalo AKG [Electric Op][] exhibit reminded me of an old folly
+(see also MoMA's Rafa&euml;l Rozendaal [Light][]).
 
 ## Piet Mondrian
 
@@ -76,24 +79,24 @@ in the [p5][] javascript library. A perfect way for me to learn a bit
 more javascript (my use of p5 is very rudimentary)! Here is the
 result:
 
-
 <div class="p5-boogie-woogie-canvas"></div>
 <script src="/assets/stdlib-js/random-base-binomial.js"></script>
 <script src ="/assets/stdlib-js/random-sample.js"></script>
 <script src="/assets/p5/libraries/p5.min.js"></script>
 <script src="/assets/p5/boogie-woogie.js"></script>
 
-The population is represented by a 100 x 50 grid of alleles, so 5000
-haploid 'individuals'. Initially all alleles are the same (random)
-color. Each generation introduces new mutations (new colors) at rate
-&mu;, and then sampling with replacement the entire population. The
-display is updated every 50 generations, at a maximum rate of 12
-frames (50 x 12 = 600 generations) per second. Progress is reported in
-number of generations scaled by population size (e.g., t / N = 1
-indicates 5000 generations). 'Segregating' alleles are just the number
-of alleles in the population at each generation. 'Replacements'
-summarize how many times a common allele has been replaced by a new
-allele.
+The population is represented by a 71 x 71 grid of alleles, so 5041
+haploid 'individuals' (I started with a rectangle of 5000 individuals,
+but then adjusted to match the square format of Mondrian's
+work). Initially all alleles are the same (random) color. Each
+generation introduces new mutations (new colors) at rate &mu;, and
+then sampling with replacement the entire population. The display is
+updated every 50 generations, at a maximum rate of 12 frames (50 x 12
+= 600 generations) per second. Progress is reported in number of
+generations scaled by population size (e.g., t / N = 1 indicates 5000
+generations). 'Segregating' alleles are just the number of alleles in
+the population at each generation. 'Replacements' summarize how many
+times a common allele has been replaced by a new allele.
 
 There is a lot of activity in the display. New alleles flicker on and
 off fairly rapidly, perhaps existing for only a few frames. The
@@ -110,11 +113,11 @@ entertainment and maybe a bit of education.
 
 See the companion [Boogie Woogie Bubble][] post.
 
-In addition to [p5][], I use the [stdlib][] javascript library (to
+In addition to [p5][], I use the [stdlib][] javascript library (for
 binomial random deviates, and to sample the population).  I also
 needed to learn how to integrate a p5 canvas into the jekyll static
-site generator (basically, adding an 'assets' folder to the root of
-the site, with javascript scripts and libraries, and inserting
+site generator (adding an 'assets' folder to the root of
+the site with javascript scripts and libraries, and inserting
 `<script>` and `<div>` tags into the markdown for this page). Here's
 the Boogie Woogie [javascript][]. 
 
@@ -122,6 +125,7 @@ Population genetics and WSU remind me of Richard Gomulkiewicz, to whom
 I dedicate this post.
 
 [Electric Op]: https://buffaloakg.org/art/exhibitions/electric-op
+[Light]: https://www.moma.org/calendar/exhibitions/5774
 [Piet Mondrian exhibit]: https://www.moma.org/calendar/exhibitions/470
 [catalog]: https://assets.moma.org/documents/moma_catalogue_470_300063147.pdf
 [p5]: https://p5js.org/

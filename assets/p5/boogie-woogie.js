@@ -1,6 +1,6 @@
 const size = 6;
-const width_n = 100;
-const height_n = 50;
+const width_n = 71;
+const height_n = 71;
 const population_n = width_n * height_n;
 const mutation_rate = 0.1 / population_n;
 const frame_n = 12;
