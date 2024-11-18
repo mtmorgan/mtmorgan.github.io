@@ -5,7 +5,7 @@ date:   2024-10-29
 categories: population-genetics javascript
 ---
 
-(modified Oct 30, 2024)
+(modified 2024-10-30, 2024-11-18)
 
 The Buffalo AKG [Electric Op][] exhibit reminded me of an [old
 folly][], and this is a second iteration. Briefly, I am using a simple

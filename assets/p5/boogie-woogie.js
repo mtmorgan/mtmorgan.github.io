@@ -1,6 +1,9 @@
-const size = 6;
+const SKETCH_CLASS = 'p5-boogie-woogie-canvas';
+
+let size = 0;
 const width_n = 71;
 const height_n = 71;
+const summary_lines = 3 * 16;
 const population_n = width_n * height_n;
 const mutation_rate = 0.1 / population_n;
 const frame_n = 12;
@@ -29,8 +32,10 @@ function generation() {
 }
 
 function setup() {
-    let p5div = select("div.p5-boogie-woogie-canvas");
-    let canvas = createCanvas(width_n * size + 160, height_n * size);
+    const wd = document.getElementsByClassName(SKETCH_CLASS)[0].clientWidth;
+    size = max(1, floor(wd / width_n));
+    const p5div = select("div." + SKETCH_CLASS);
+    let canvas = createCanvas(width_n * size, height_n * size + summary_lines);
     p5div.child(canvas);
 
     frameRate(frame_n);
@@ -63,16 +68,11 @@ function draw() {
     }
         
     // summary stats
-    const summary_lines = 6;
     const Nu = Math.round(population_n * mutation_rate * 100) / 100.;
     const t = Math.round(generations / population_n * 100) / 100.;
-    const stats_text = `Population size (N): ${population_n}
-Mutation rate (N \u00B5): ${Nu}
+    const stats_text = `Population (N): ${population_n}; Mutation rate (N \u00B5): ${Nu}
 Time (t / N): ${t}
-Alleles:
-  Segregating: ${alleles.size}
-  Replacements: ${common_alleles.size - 1}`;
-    fill("white").rect(width_n * size, 0, 160, 15 * summary_lines);
-    fill("black").text(stats_text, width_n * size + 6, 12);
-
+Alleles: Segregating: ${alleles.size}; Replacements: ${common_alleles.size - 1}`;
+    fill("white").rect(0, height_n * size, width_n * size, height_n * size + summary_lines);
+    fill("black").text(stats_text, 0, height_n * size + 12);
 }

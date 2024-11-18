@@ -5,7 +5,7 @@ date:   2024-10-28
 categories: population-genetics javascript
 ---
 
-(updated 2024-11-14)
+(updated 2024-11-14; 2024-11-18)
 
 The Buffalo AKG [Electric Op][] exhibit reminded me of an old folly
 (see also MoMA's Rafa&euml;l Rozendaal [Light][]).

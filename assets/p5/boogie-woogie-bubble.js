@@ -16,6 +16,7 @@ const sketch_boogie_bubble = (p) => {
     // display constants
     let width_n = 0;                // defined in setup()
     const height_n = 500;
+    const summary_lines = 3 * 16;
     let max_radius;
     let max_area;
     const alpha = 200;
@@ -75,9 +76,9 @@ const sketch_boogie_bubble = (p) => {
         max_radius = Math.min(height_n, width_n) / 2.;
         max_area = Math.PI * max_radius ** 2.;
 
-        p.createCanvas(width_n, height_n);
+        p.createCanvas(width_n, height_n + summary_lines);
         p.frameRate(frame_rate);
-        p.strokeWeight(1);
+        p.strokeWeight(0);
         population.push(allele_new(population_n));
     }
 
@@ -102,17 +103,13 @@ const sketch_boogie_bubble = (p) => {
         }
 
         // summary stats
-        const summary_lines = 6;
         const Nu = Math.round(population_n * mutation_rate * 100) / 100.;
         const t = Math.round(generations / population_n * 100) / 100.;
-        const stats_text = `Population size (N): ${population_n}
-Mutation rate (N \u00B5): ${Nu}
+        const stats_text = `Population (N): ${population_n}; Mutation rate (N \u00B5): ${Nu}
 Time (t / N): ${t}
-Alleles:
-  Segregating: ${population.length}
-  Replacements: ${common_alleles.size}`;
-        p.fill("white").rect(0, 0, 160, 15 * summary_lines);
-        p.fill("black").text(stats_text, 6, 12);
+Alleles: Segregating: ${population.length}; Replacements: ${common_alleles.size}`;
+        p.fill("white").rect(0, height_n, width_n, height_n + summary_lines);
+        p.fill("black").text(stats_text, 0, height_n + 12);
     }
 }
 
