@@ -4,7 +4,7 @@ title: CV
 permalink: /cv/
 ---
 
-Updated: 22 August, 2024
+Updated: 26 November, 2024
 
 # Contact information
 
@@ -34,6 +34,9 @@ of bioinformatic tools.
 - Washington State University, 1996-2005. Assistant and Associate
   (tenured) Professor, School of Biological Sciences.
 - University of Chicago, 1988-1993. PhD in Evolutionary Biology.
+- Publication and funding history ([ScholarGPS][])
+
+[ScholarGPS]: https://scholargps.com/scholars/87119196592830/martin-t-morgan
 
 # Major accomplishments
 

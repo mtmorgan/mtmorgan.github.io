@@ -78,7 +78,7 @@ const sketch_boogie_bubble = (p) => {
 
         p.createCanvas(width_n, height_n + summary_lines);
         p.frameRate(frame_rate);
-        p.strokeWeight(0);
+        p.strokeWeight(1);
         population.push(allele_new(population_n));
     }
 
