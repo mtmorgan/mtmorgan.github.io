@@ -99,27 +99,31 @@ class Orbit3D extends Orbit {
         super(period, inclination, t0, dt, n_points);
     }
 
-    draw_points(p, radius, rotation, rotation_dt) {
-        p.push();
-
+    draw_points = (
+        p, radius, rotation, rotation_dt,
+        sphere_scale = 1, sphere_fill = p.color("white")) =>
+    {
         const offset =
-              Math.PI / 2 - rotation + 
+              Math.PI / 2 - rotation +
               rotation_dt * this.points.length; // at coordinate [0, 1, 0]
+        const alpha_max = sphere_fill.maxes[sphere_fill.mode][3];
+
+        p.push();
         p.rotateY(offset);
-        p.strokeWeight(1);
         const t0 = this.points[this.ith_point].time;
         for (let i = 0; i < this.points.length; ++i) {
-            const alpha = p.map(i, 0, this.points.length, 0, 255);
+            const alpha = p.map(i, 0, this.points.length, 0, alpha_max);
             const from = this.points[this.ith_point];
+            const size = i == this.points.length - 1 ? sphere_scale * 4 : 4;
             this.ith_point = (this.ith_point + 1) % this.points.length;
 
             p.push()
             p.rotateY(-rotation_dt * i);
             p.translate(-radius * from.x, radius * from.y, radius * from.z);
-            p.stroke(255, 255, 255, alpha).fill(0, 0, 0, alpha).sphere(2);
+            sphere_fill.setAlpha(alpha);
+            p.noStroke().fill(sphere_fill).sphere(size);
             p.pop();
         }
-
         p.pop();
     }
 
@@ -136,11 +140,10 @@ class Orbit3D extends Orbit {
     }
 }
 
-const sketch_orbital = (p) => {
+const sketch_orbital_projection = (p) => {
     // canvas dimensions, scaled to radius units
-    const radius = EARTH.radius * PARAM.scale2d;
-    const width = 2 * Math.PI * radius;
-    const height = Math.PI * radius;
+    let width = 0; // defined in p.setup() 2 * Math.PI * radius;
+    let height = 0; // Math.PI * radius;
 
     const dt = PARAM.dt;
     const n_points = 8 * Math.PI / ISS.period / dt;
@@ -154,6 +157,10 @@ const sketch_orbital = (p) => {
     }
 
     p.setup = () => {
+        width = document.getElementById("sketch-orbital-projection").
+            clientWidth;
+        height = width / 2;
+
         p.createCanvas(width, height, p.WEBGL);
         p.frameRate(PARAM.frame_rate);
         p.strokeWeight(1);
@@ -218,6 +225,90 @@ const sketch_orbital_sphere = (p) => {
     }
 }
 
-new p5(sketch_orbital, "sketch-orbital");
+const sketch_orbital = (p) => {
+    // canvas dimensions, scaled to radius units
+    let scale = 0;
+    // const width = 2.2 * ISS.orbit * PARAM.scale3d;
+    // const height = 2.2 * ISS.orbit * PARAM.scale3d;
+
+    const dt = 1;
+    const n_points = 92;
+    const iss =
+          new Orbit3D(ISS.period, radians(90) - ISS.inclination, dt, n_points);
+
+    const earth_n_points = 2 * Math.PI / EARTH.period / dt;
+    const equator = new Orbit3D(EARTH.period, radians(90), dt, earth_n_points);
+
+    const x_axis = p.createVector(1, 0, 0);
+    const z_axis = p.createVector(0, 0, 1);
+    const ambient_light = p.color(40);
+    let light_direction = p.createVector(0, 1, 0);
+    light_direction = rotate_around(light_direction, x_axis, -Math.PI / 8);
+    light_direction = rotate_around(light_direction, z_axis, Math.PI / 8);
+    let background_color = 0;
+    let sphere_color = 0;
+    let earth_color = 0;
+    let light_color = 0;
+
+    // https://stackoverflow.com/a/67468546/547331
+    // Rotate one vector (vect) around another (axis) by the specified angle.
+    function rotate_around(vect, axis, angle) {
+        // Make sure our axis is a unit vector
+        axis = p5.Vector.normalize(axis);
+
+        return p5.Vector.add(
+            // v cos(theta)
+            p5.Vector.mult(vect, Math.cos(angle)),
+            p5.Vector.add(
+                // (k x v) sin(theta)
+                p5.Vector.mult(
+                    p5.Vector.cross(axis, vect),
+                    Math.sin(angle)
+                ),
+                // k (k . v) (1 - cos(theta))
+                p5.Vector.mult(
+                    p5.Vector.mult(axis, p5.Vector.dot(axis, vect)),
+                    (1 - Math.cos(angle))
+                )
+            )
+        );
+    }
+
+    p.setup = () => {
+        const width = Math.min(
+            document.getElementById("sketch-orbital-projection"). clientWidth,
+            500);
+        const height = width;
+        scale = (height / 2.2) / ISS.orbit;
+        p.createCanvas(width, height, p.WEBGL);
+
+        p.colorMode(p.HSB);
+        background_color = p.color(230, 100, 25);
+        sphere_color = p.color(0, 0, 100);
+        earth_color = p.color(125, 75, 25);
+        light_color = p.color(0, 0, 100);
+
+        p.frameRate(92/60); //PARAM.frame_rate);
+
+        p.describe("Orbital Earth Sketch");
+    }
+
+    p.draw = () => {
+        p.background(background_color);
+        p.directionalLight(light_color, light_direction).
+            directionalLight(light_color, light_direction);
+        p.ambientLight(ambient_light);
+        p.rotateX(-Math.PI / 16).rotateZ(Math.PI/16);
+        p.noStroke().fill(earth_color).sphere(EARTH.radius * scale, 24, 24);
+        iss.draw_points(p, ISS.orbit * scale, 0, 0, 1.618);
+        equator.draw_orbit(p, EARTH.radius * scale);
+
+        iss.update();
+    }
+}
+
+new p5(sketch_orbital_projection, "sketch-orbital-projection");
 
 new p5(sketch_orbital_sphere, "sketch-orbital-sphere");
+
+new p5(sketch_orbital, "sketch-orbital");

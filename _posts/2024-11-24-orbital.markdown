@@ -12,7 +12,7 @@ This continues my exploration of JavaScript.
 
 ## Motivation
 
-Smanatha Harvey says her book *[Orbital][]* tries to be a space
+Samantha Harvey says her book *[Orbital][]* tries to be a space
 *pastoral*, describing the relationships of six space station
 astronauts during the sixteen orbits of a single earth day. There is
 no threatening destruction or steamy romance, just an encounter
@@ -24,7 +24,14 @@ The frontispiece of [Orbital][] shows the orbits of the space station
 during this day; it is fun to think about orbits. For instance,
 daylight is not restricted to the northern hemisphere!
 
-![](/assets/orbital/frontispiece.jpeg)
+<figure>
+    <img alt="Frontispiece, Orbital" src="/assets/orbital/frontispiece.jpeg" />
+    <figcaption>
+        Frontispiece, 
+        <a href="https://thebookerprizes.com/the-booker-library/books/orbital">Orbital</a>, 
+        Samantha Harvey, 2023.
+    </figcaption>
+</figure>
 
 A *circular* orbit is a path where an object (e.g., space station)
 moves around a central body (e.g., the earth) in a perfect circle. An
@@ -36,21 +43,32 @@ angle that each orbit crosses the equator.
 If the earth were stationary, the space station would always traverse
 the globe along a single circumference. But the earth rotates, so each
 time the space station completes an orbit, its location over the
-ground has changed. The amount of change is the amount that the
-earth has rotated during the space station's orbit.
+ground has changed. The amount of change is the amount that the earth
+has rotated during the space station's orbit. This is why the orbits
+are offset in the frontispiece above.
 
-The height of a satellite orbit occurs when gravitational force
+The altitude of a satellite orbit occurs when gravitational force
 pulling the satellite toward the earth is balanced by the centripetal
 force caused by the speed of the satellite in orbit. Since satellite
 mass is a linear term in both the gravitational and centripetal
 equations, the actual mass of the satellite does not determine
-orbit. The faster a satellite travels, the further from the earth its
-orbit is. Perhaps surprisingly, the faster a satellite travels, the
-*longer* its orbital period (because the faster speed results in
-greater distance from earth, so the satellite has to travel further to
-complete an orbit). Geostationary satellites are much further from the
-earth (35,800 km) than the space station (in low earth orbit, about
-410 km).
+orbit. Geostationary satellites are much further from the earth
+(35,800 km) than the space station (in low earth orbit, about 410
+km). Satellites in more distance (e.g., geostationary) orbits move
+slower than satellites closer to the earth (e.g., the space station or
+StarLink communication satellites) because satellites closer to the
+earth have to overcome the stronger force of Earth's gravity.
+
+There are a *lot* of satellites (and other objects) in space. Here are
+the almost 7,000 Starlink satellites.
+
+<figure>
+    <img alt="Starlink orbits" src="/assets/orbital/starlink.png" width="50%">
+    <figcaption>
+    <em>Starlink</em> orbits, Decemeber 2024, from
+    <a href="https://app.keeptrack.space">KeepTrack.space</a>.
+    </figcaption>
+</figure>
 
 ## Math
 
@@ -104,6 +122,17 @@ inclination of the space station orbit is approximately 51.6&deg;.
 
 [StackExchange]: https://space.stackexchange.com/a/43416
 
+A more realistic calculation might use [two-line element set][2line]
+notation to characterize the location and movement of a satellites at
+a particular point in time, coupled with [simplified perturbation
+models][spm] to calculate orbital state vectors. [satellites-js][] or
+[ootk][] are two JavaScript implementations.
+
+[2line]: https://en.wikipedia.org/wiki/Two-line_element_set
+[spm]: https://en.wikipedia.org/wiki/Simplified_perturbations_models
+[satellites-js]: https://github.com/shashwatak/satellite-js
+[ootk]: https://github.com/thkruz/ootk-core
+
 ## Orbital
 
 The first sketch show a flattened earth, with space station orbits
@@ -116,25 +145,32 @@ apart at the largest latitudes; this is because the projection of the
 spherical earth into two dimensions stretches larger latitudes more
 than smaller latitudes.
 
-<div id="sketch-orbital"></div>
+<div id="sketch-orbital-projection"></div>
 
 The second sketch shows the rotating earth, inclined 23.5&deg;. The
 space station orbit is constant, always intersecting the equator in
 the middle of the image. The location of the space station is
-described the the equations for <span>$$x, y, z$$</span> above. The
-orbit is inclined 51.6&deg; from the equator. Space station markers
-move to the right in synchrony with the rotating earth; it took me a
-long time to figure out how to make this simple transformation in
-p5!. The earth's radius is 6378 km, and the orbit is 400 km above the
+described the equations for <span>$$x, y, z$$</span> above. The orbit
+is inclined 51.6&deg; from the equator. Space station markers move to
+the right in synchrony with the rotating earth; it took me a long time
+to figure out how to make this simple transformation in p5!. The
+earth's radius is 6378 km, and the orbit is 400 km above the
 earth. Illumination is from the front and left, as would occur
-somewhere between the spring (June) solistic and summer (March)
+somewhere between the spring (June) solstice and summer (March)
 equinox; the image of the earth, from [NASA][NASA-earth-images], is
 generated from November data, so is not quite correct.
 
 <div id="sketch-orbital-sphere"></div>
-<script type="module"  src="/assets/orbital/orbital.js"></script>
 
 [NASA-earth-images]: https://visibleearth.nasa.gov/images/73884/november-blue-marble-next-generation-w-topography-and-bathymetry
+
+An abstraction has the earth's sphere, equator, and orbit. The earth
+is illuminated from the top so that 'daylight is in the northern
+hemisphere'. The space station orbit pulses at 92 beats per minute,
+fading into the earth. The axial tilt of the earth is a little akimbo.
+
+<div id="sketch-orbital"></div>
+<script type="module" src="/assets/orbital/orbital.js"></script>
 
 ## Notes
 
@@ -149,8 +185,11 @@ object. `push()` and `pop()` are used to limit the effects of
 `translate()` etc., to sepcific shapes.
 
 This post uses MathJax for rendering mathematical equations; see this
-helpful [StackOverlow][StackOverlow-MathJax] post.
+helpful [StackOverflow][StackOverflow-MathJax] post. I used Rodriques'
+rotation formula from this [StackOverflow][StackOverflow-rotation]
+answer to rotate the light source around the Earth.
 
 [p5]: https://p5js.org/
 [JavaScript]: /assets/orbital/orbital.js
 [StackOverflow-MathJax]: https://stackoverflow.com/a/11093303/547331
+[StackOverflow-rotation]: https://stackoverflow.com/a/67468546/547331
