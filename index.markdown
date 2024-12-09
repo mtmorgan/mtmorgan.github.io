@@ -1,4 +1,4 @@
 ---
 layout: home
-list_title: "Recent Activity"
+list_title: "Recent activity"
 ---

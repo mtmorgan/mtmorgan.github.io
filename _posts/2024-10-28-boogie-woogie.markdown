@@ -2,7 +2,7 @@
 layout: post
 title:  "Boogie Woogie"
 date:   2024-10-28
-categories: population-genetics javascript
+categories: javascript population-genetics
 ---
 
 (updated 2024-11-14; 2024-11-18)

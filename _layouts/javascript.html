@@ -3,16 +3,20 @@ layout: default
 ---
 
 <div class="home">
-    <h1 class="page-heading">{{ page.title | default: "<em>R</em> and <em>Bioconductor</em>" }}</h1>
+  {%- if page.title -%}
+    <h1 class="page-heading">{{ page.title }}</h1>
+  {%- endif -%}
 
-    <p>Posts on this page relate to my professional interest
-    in <em>R</em>.</p>
+    <p>I am teaching myself JavaScript using
+    the <a href="https://p5js.org/">p5.js</a> library. These posts
+    record my progress.</p>
 
   <!-- {%- if site.posts.size > 0 -%} -->
     <h2 class="post-list-heading">{{ page.list_title | default: "Recent software" }}</h2>
     <ul class="post-list">
-      {%- for post in site.posts -%}
-      {%- unless post.categories contains 'javascript' -%}
+      {%- assign filtered_posts = site.posts | where_exp: "post", "post.categories contains 'javascript'" -%}
+
+      {%- for post in filtered_posts -%}
       <li>
         {%- assign date_format = site.minima.date_format | default: "%b %-d, %Y" -%}
         <span class="post-meta">{{ post.date | date: date_format }}</span>
@@ -25,11 +29,9 @@ layout: default
           {{ post.excerpt }}
         {%- endif -%}
       </li>
-      {%- endunless -%}
       {%- endfor -%}
     </ul>
 
-    <p class="rss-subscribe">subscribe <a href="{{ "/feed.xml" | relative_url }}">via RSS</a></p>
   {%- endif -%}
 
   {{ content }}
