@@ -1,7 +1,5 @@
 ---
-layout: page
-title: CV
-permalink: /cv/
+layout: default
 ---
 
 Updated: 26 November, 2024

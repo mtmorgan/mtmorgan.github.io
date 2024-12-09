@@ -5,10 +5,9 @@ layout: default
 <div class="home">
     <h1 class="page-heading">{{ page.title | default: "<em>R</em> and <em>Bioconductor</em>" }}</h1>
 
-    <p>Posts on this page relate to my professional interest
-    in <em>R</em>.</p>
+    {{ content }}
 
-  <!-- {%- if site.posts.size > 0 -%} -->
+    <!-- {%- if site.posts.size > 0 -%} -->
     <h2 class="post-list-heading">{{ page.list_title | default: "Recent software" }}</h2>
     <ul class="post-list">
       {%- for post in site.posts -%}
@@ -31,7 +30,5 @@ layout: default
 
     <p class="rss-subscribe">subscribe <a href="{{ "/feed.xml" | relative_url }}">via RSS</a></p>
   {%- endif -%}
-
-  {{ content }}
 
 </div>

@@ -7,11 +7,9 @@ layout: default
     <h1 class="page-heading">{{ page.title }}</h1>
   {%- endif -%}
 
-    <p>I am teaching myself JavaScript using
-    the <a href="https://p5js.org/">p5.js</a> library. These posts
-    record my progress.</p>
+    {{ content }}
 
-  <!-- {%- if site.posts.size > 0 -%} -->
+    <!-- {%- if site.posts.size > 0 -%} -->
     <h2 class="post-list-heading">{{ page.list_title | default: "Recent software" }}</h2>
     <ul class="post-list">
       {%- assign filtered_posts = site.posts | where_exp: "post", "post.categories contains 'javascript'" -%}
@@ -33,7 +31,5 @@ layout: default
     </ul>
 
   {%- endif -%}
-
-  {{ content }}
 
 </div>
