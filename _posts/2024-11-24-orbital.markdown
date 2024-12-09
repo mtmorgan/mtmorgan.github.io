@@ -1,0 +1,195 @@
+---
+layout: post
+title:  "Orbital"
+date:   2024-11-24
+categories: javascript
+---
+
+<!-- mathjax, see https://stackoverflow.com/a/11093303/547331 -->
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+This continues my exploration of JavaScript.
+
+## Motivation
+
+Samantha Harvey says her book *[Orbital][]* tries to be a space
+*pastoral*, describing the relationships of six space station
+astronauts during the sixteen orbits of a single earth day. There is
+no threatening destruction or steamy romance, just an encounter
+between Earth and its Anthropocene exhabitants.
+
+[Orbital]: https://thebookerprizes.com/the-booker-library/books/orbital
+
+The frontispiece of [Orbital][] shows the orbits of the space station
+during this day; it is fun to think about orbits. For instance,
+daylight is not restricted to the northern hemisphere!
+
+<figure>
+    <img alt="Frontispiece, Orbital" src="/assets/orbital/frontispiece.jpeg" />
+    <figcaption>
+        Frontispiece, 
+        <a href="https://thebookerprizes.com/the-booker-library/books/orbital">Orbital</a>, 
+        Samantha Harvey, 2023.
+    </figcaption>
+</figure>
+
+A *circular* orbit is a path where an object (e.g., space station)
+moves around a central body (e.g., the earth) in a perfect circle. An
+*equatorial* orbit is an orbit that is directly above the equator.  An
+*inclined* orbit is tilted relative to the equator. The space station
+has an inclined orbit, where the inclination is 51.6&deg;. This is the
+angle that each orbit crosses the equator.
+
+If the earth were stationary, the space station would always traverse
+the globe along a single circumference. But the earth rotates, so each
+time the space station completes an orbit, its location over the
+ground has changed. The amount of change is the amount that the earth
+has rotated during the space station's orbit. This is why the orbits
+are offset in the frontispiece above.
+
+The altitude of a satellite orbit occurs when gravitational force
+pulling the satellite toward the earth is balanced by the centripetal
+force caused by the speed of the satellite in orbit. Since satellite
+mass is a linear term in both the gravitational and centripetal
+equations, the actual mass of the satellite does not determine
+orbit. Geostationary satellites are much further from the earth
+(35,800 km) than the space station (in low earth orbit, about 410
+km). Satellites in more distance (e.g., geostationary) orbits move
+slower than satellites closer to the earth (e.g., the space station or
+StarLink communication satellites) because satellites closer to the
+earth have to overcome the stronger force of Earth's gravity.
+
+There are a *lot* of satellites (and other objects) in space. Here are
+the almost 7,000 Starlink satellites.
+
+<figure>
+    <img alt="Starlink orbits" src="/assets/orbital/starlink.png" width="50%">
+    <figcaption>
+    <em>Starlink</em> orbits, Decemeber 2024, from
+    <a href="https://app.keeptrack.space">KeepTrack.space</a>.
+    </figcaption>
+</figure>
+
+## Math
+
+This answer on the Space Exploration [StackExchange][] provides basic
+math required. There are three steps.
+
+The first step is to describe movement on a sphere with an inclined orbit.
+
+<div>
+\begin{align}
+x &= \cos \omega(t) \\
+y &= \sin \omega(t) \cos i \\
+z &= \sin \omega(t) \sin i
+\end{align}
+</div>
+
+where the radius of the orbit is 1, <span>$$\omega = 2 \pi /
+T$$</span> is the circumference of the sphere scaled by the orbital
+period <span>$$T$$</span>, and <span>$$i$$</span> the inclination of
+the orbit. <span>$$t$$</span> is the time since the start of the orbit.
+
+The next step is to translate the three-dimensional coordinates to
+two-dimensional latitude and longitude. These equations assume that
+the orbit starts at longitude 0.
+
+<div>
+\begin{align}
+lon &= \arctan2(y, x) \\
+lat &= \arcsin(x)
+\end{align}
+</div>
+
+Incorporate the rotation of the earth by subtracting the scaled
+orbital period of the earth; only the longitude is influenced by the
+rotating earth.
+
+<div>
+\begin{equation}
+lon = \arctan2(y, x) - \omega_E(t - t_0)
+\end{equation}
+</div>
+
+<span>$$\omega_E = 2 \pi / T_E$$</span> and <span>$$T_E$$</span> is
+the orbital period of the earth.
+
+We use minutes as the unit of time. The orbital period of the space
+station <span>$$T$$</span>varies between 90 and 93 minutes; we'll use
+92 minutes. The orbital period of the earth <span>$$T_E$$</span> is
+approximately 1436 minutes (23 hours 56 minutes and 4 seconds). The
+inclination of the space station orbit is approximately 51.6&deg;.
+
+[StackExchange]: https://space.stackexchange.com/a/43416
+
+A more realistic calculation might use [two-line element set][2line]
+notation to characterize the location and movement of a satellites at
+a particular point in time, coupled with [simplified perturbation
+models][spm] to calculate orbital state vectors. [satellites-js][] or
+[ootk][] are two JavaScript implementations.
+
+[2line]: https://en.wikipedia.org/wiki/Two-line_element_set
+[spm]: https://en.wikipedia.org/wiki/Simplified_perturbations_models
+[satellites-js]: https://github.com/shashwatak/satellite-js
+[ootk]: https://github.com/thkruz/ootk-core
+
+## Orbital
+
+The first sketch show a flattened earth, with space station orbits
+superimposed. The orbits are described by equations for <span>$$lat,
+lon$$</span> from the previous section. The orbits appear offset in
+space. But actually the orbits are constant, it is the earth that
+rotates under the space station.  The space station dots are equally
+spaced in time, but a close observation shows that they are further
+apart at the largest latitudes; this is because the projection of the
+spherical earth into two dimensions stretches larger latitudes more
+than smaller latitudes.
+
+<div id="sketch-orbital-projection"></div>
+
+The second sketch shows the rotating earth, inclined 23.5&deg;. The
+space station orbit is constant, always intersecting the equator in
+the middle of the image. The location of the space station is
+described the equations for <span>$$x, y, z$$</span> above. The orbit
+is inclined 51.6&deg; from the equator. Space station markers move to
+the right in synchrony with the rotating earth; it took me a long time
+to figure out how to make this simple transformation in p5!. The
+earth's radius is 6378 km, and the orbit is 400 km above the
+earth. Illumination is from the front and left, as would occur
+somewhere between the spring (June) solstice and summer (March)
+equinox; the image of the earth, from [NASA][NASA-earth-images], is
+generated from November data, so is not quite correct.
+
+<div id="sketch-orbital-sphere"></div>
+
+[NASA-earth-images]: https://visibleearth.nasa.gov/images/73884/november-blue-marble-next-generation-w-topography-and-bathymetry
+
+An abstraction has the earth's sphere, equator, and orbit. The earth
+is illuminated from the top so that 'daylight is in the northern
+hemisphere'. The space station orbit pulses at 92 beats per minute,
+fading into the earth. The axial tilt of the earth is a little akimbo.
+
+<div id="sketch-orbital"></div>
+<script type="module" src="/assets/orbital/orbital.js"></script>
+
+## Notes
+
+The implementation uses [p5][]; here's the [JavaScript][]. I use
+'WEBGL' mode for 3D rendering. A difference between WEBGL and P2D
+rendering is the the WEBGL coordinate system has the center of the
+canvas as the origin, versus the top left under P2D. Also objects in
+WEBGL are are always centered at 0; locations in the canvas are
+determined using operations such as `translate()` and `rotateY()` to
+adjust the relative coordinate system before drawing the
+object. `push()` and `pop()` are used to limit the effects of
+`translate()` etc., to sepcific shapes.
+
+This post uses MathJax for rendering mathematical equations; see this
+helpful [StackOverflow][StackOverflow-MathJax] post. I used Rodriques'
+rotation formula from this [StackOverflow][StackOverflow-rotation]
+answer to rotate the light source around the Earth.
+
+[p5]: https://p5js.org/
+[JavaScript]: /assets/orbital/orbital.js
+[StackOverflow-MathJax]: https://stackoverflow.com/a/11093303/547331
+[StackOverflow-rotation]: https://stackoverflow.com/a/67468546/547331
