@@ -1,11 +1,11 @@
 ---
 layout: post
-title:  "Boogie Woogie Bubble"
+title:  "Bubble"
 date:   2024-10-29
 categories: javascript population-genetics
 ---
 
-(modified 2024-10-30, 2024-11-18)
+(modified 2024-10-30, 2024-11-18, 2024-12-10)
 
 The Buffalo AKG [Electric Op][] exhibit reminded me of an [old
 folly][], and this is a second iteration. Briefly, I am using a simple
@@ -23,16 +23,18 @@ may still have some artistic merit...
 
 <div id="sketch-boogie-bubble"></div>
 <script src="/assets/p5/libraries/p5.min.js"></script>
-<script type="module" src="/assets/p5/boogie-woogie-bubble.js"></script>
+<script type="module" src="/assets//boogie-woogie/bubble.js"></script>
 
-The population size N is 10 times larger, and the mutation rate &mu;
-10 times smaller, than in the individual-based simulation. The number
-of generations per frame is increased four-fold to 200, and the frame
-rate doubled to 24 (200 x 24 = 4800 generations) per second (available
-CPU may limit the rate of display; this animation is slow on mobile
-devices).  As before, 'Segregating' alleles are just the number of
-alleles in the population at each generation. 'Replacements' summarize
-how many times a common allele has been replaced by a new allele.
+The population size N is 2-10 times larger (depending on the width of
+the display, as a proxy for processor speed), and the mutation rate
+&mu; 10 times smaller, than in the individual-based simulation. The
+number of generations per frame is increased four-fold to 200, and the
+frame rate doubled to 24 (200 x 24 = 4800 generations) per second
+(available CPU may limit the rate of display; this animation is slow
+on mobile devices).  As before, 'Segregating' alleles are just the
+number of alleles in the population at each generation. 'Replacements'
+summarize how many times a common allele has been replaced by a new
+allele.
 
 ## Notes on representation
 

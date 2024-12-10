@@ -21,7 +21,7 @@ That gray canvas is penciled lines bouncing over a textured
 background. Here's a close-up (trigger warning: please move away from
 the art; also, do not lick the art).
 
-![image](/assets/agnes-martin-the-tree-1965-close.jpeg)
+![image](/assets/agnes-martin/the-tree-1965-close.jpeg)
 
 I like how this is so structured, but not perfect or
 mechanical. Textures bump the line away from straight. Lines end but
@@ -42,7 +42,7 @@ I imagine that the lines are drawn as warp and then weft. The practice
 is contemplative, so the lines are drawn slowly.
 
 <div id="sketch-agnes-martin"></div>
-<script type="module"  src="/assets/p5/agnes-martin.js"></script>
+<script type="module"  src="/assets/agnes-martin/agnes-martin.js"></script>
 
 
 ## Notes

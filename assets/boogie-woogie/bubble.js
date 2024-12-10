@@ -4,7 +4,7 @@ const SKETCH_ID = 'sketch-boogie-bubble';
 
 const sketch_boogie_bubble = (p) => {
     // simulation parameters
-    const population_n = 50000;
+    let population_n = 50000;
     const mutation_rate = .100 / population_n;
 
     // data
@@ -79,6 +79,9 @@ const sketch_boogie_bubble = (p) => {
         p.createCanvas(width_n, height_n + summary_lines);
         p.frameRate(frame_rate);
         p.strokeWeight(1);
+
+        if (width_n < 400)
+            population_n /= 5;  // mobile device w/ slower processor?
         population.push(allele_new(population_n));
     }
 
@@ -89,7 +92,7 @@ const sketch_boogie_bubble = (p) => {
         }
 
         // display
-        p.fill("black").rect(0, 0, width_n, height_n);
+        p.strokeWeight(0).fill("black").rect(0, 0, width_n, height_n);
         population.sort((a, b) => b.n - a.n);
         // 'common' allele at some point in simulation
         if (population.length == 1 || population[0].n > 2 * population[1].n)
@@ -99,7 +102,7 @@ const sketch_boogie_bubble = (p) => {
         for (const indiv of population) {
             const area = max_area * indiv.n / population_n;
             const radius = Math.sqrt(area / Math.PI);
-            p.fill(indiv.color).circle(indiv.x, indiv.y, 2 * radius);
+            p.strokeWeight(1).fill(indiv.color).circle(indiv.x, indiv.y, 2 * radius);
         }
 
         // summary stats
@@ -108,7 +111,7 @@ const sketch_boogie_bubble = (p) => {
         const stats_text = `Population (N): ${population_n}; Mutation rate (N \u00B5): ${Nu}
 Time (t / N): ${t}
 Alleles: Segregating: ${population.length}; Replacements: ${common_alleles.size}`;
-        p.fill("white").rect(0, height_n, width_n, height_n + summary_lines);
+        p.fill("white").strokeWeight(0).rect(0, height_n, width_n, height_n + summary_lines);
         p.fill("black").text(stats_text, 0, height_n + 12);
     }
 }

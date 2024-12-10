@@ -83,7 +83,7 @@ result:
 <script src="/assets/stdlib-js/random-base-binomial.js"></script>
 <script src ="/assets/stdlib-js/random-sample.js"></script>
 <script src="/assets/p5/libraries/p5.min.js"></script>
-<script src="/assets/p5/boogie-woogie.js"></script>
+<script src="/assets/boogie-woogie/boogie-woogie.js"></script>
 
 The population is represented by a 71 x 71 grid of alleles, so 5041
 haploid 'individuals' (I started with a rectangle of 5000 individuals,
