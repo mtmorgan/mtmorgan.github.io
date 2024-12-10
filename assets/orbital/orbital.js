@@ -127,12 +127,12 @@ class Orbit3D extends Orbit {
         p.pop();
     }
 
-    draw_orbit(p, radius) {
+    draw_orbit(p, radius, stroke_color = p.color("red")) {
         for (let i = 0; i < this.points.length; ++i) {
             const from = this.points[this.ith_point];
             this.ith_point = (this.ith_point + 1) % this.points.length;
             const to = this.points[this.ith_point];
-            p.strokeWeight(1).stroke("red").line(
+            p.strokeWeight(1).stroke(stroke_color).line(
                 -radius * from.x, radius * from.y, radius * from.z,
                 -radius * to.x, radius * to.y, radius * to.z
             );
@@ -232,7 +232,7 @@ const sketch_orbital = (p) => {
     // const height = 2.2 * ISS.orbit * PARAM.scale3d;
 
     const dt = 1;
-    const n_points = 92;
+    const n_points = 82;
     const iss =
           new Orbit3D(ISS.period, radians(90) - ISS.inclination, dt, n_points);
 
@@ -246,8 +246,9 @@ const sketch_orbital = (p) => {
     light_direction = rotate_around(light_direction, x_axis, -Math.PI / 8);
     light_direction = rotate_around(light_direction, z_axis, Math.PI / 8);
     let background_color = 0;
-    let sphere_color = 0;
     let earth_color = 0;
+    let sphere_color = 0;
+    let equator_color =  0;
     let light_color = 0;
 
     // https://stackoverflow.com/a/67468546/547331
@@ -284,8 +285,9 @@ const sketch_orbital = (p) => {
 
         p.colorMode(p.HSB);
         background_color = p.color(230, 100, 25);
-        sphere_color = p.color(0, 0, 100);
         earth_color = p.color(125, 75, 25);
+        sphere_color = p.color(125, 75, 60);
+        equator_color = p.color(50, 75, 50);
         light_color = p.color(0, 0, 100);
 
         p.frameRate(92/60); //PARAM.frame_rate);
@@ -300,8 +302,8 @@ const sketch_orbital = (p) => {
         p.ambientLight(ambient_light);
         p.rotateX(-Math.PI / 16).rotateZ(Math.PI/16);
         p.noStroke().fill(earth_color).sphere(EARTH.radius * scale, 24, 24);
-        iss.draw_points(p, ISS.orbit * scale, 0, 0, 1.618);
-        equator.draw_orbit(p, EARTH.radius * scale);
+        iss.draw_points(p, ISS.orbit * scale, 0, 0, 1.618, sphere_color);
+        equator.draw_orbit(p, EARTH.radius * scale, equator_color);
 
         iss.update();
     }
