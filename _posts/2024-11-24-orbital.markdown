@@ -145,7 +145,7 @@ apart at the largest latitudes; this is because the projection of the
 spherical earth into two dimensions stretches larger latitudes more
 than smaller latitudes.
 
-<div id="sketch-orbital-projection"></div>
+<div id="sketch-projection"></div>
 
 The second sketch shows the rotating earth, inclined 23.5&deg;. The
 space station orbit is constant, always intersecting the equator in
@@ -160,7 +160,7 @@ somewhere between the spring (June) solstice and summer (March)
 equinox; the image of the earth, from [NASA][NASA-earth-images], is
 generated from November data, so is not quite correct.
 
-<div id="sketch-orbital-sphere"></div>
+<div id="sketch-sphere"></div>
 
 [NASA-earth-images]: https://visibleearth.nasa.gov/images/73884/november-blue-marble-next-generation-w-topography-and-bathymetry
 
