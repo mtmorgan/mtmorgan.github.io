@@ -235,28 +235,38 @@ const sketch_orbital_sphere = (p) => {
 const sketch_orbital = (p) => {
     // canvas dimensions, scaled to radius units
     let scale = 0;
-    // const width = 2.2 * ISS.orbit * PARAM.scale3d;
-    // const height = 2.2 * ISS.orbit * PARAM.scale3d;
 
     const dt = 1;
     const n_points = 82;
+    const frame_rate = 92 / 60;
     const iss =
           new Orbit3D(ISS.period, radians(90) - ISS.inclination, dt, n_points);
 
-    const earth_n_points = 2 * Math.PI / EARTH.period / dt;
-    const equator = new Orbit3D(EARTH.period, radians(90), dt, earth_n_points);
+    const equator_n_points = 2 * Math.PI / EARTH.period / dt;
+    const equator =
+          new Orbit3D(EARTH.period, radians(90), dt, equator_n_points);
 
+    // set when get_location() eventually resolves
+    let device_location;
+    const device_size = 8;
+    const earth_rotation_dt = dt * EARTH.period;
+    let earth_rotation = 0;
+
+    // colors
     const x_axis = p.createVector(1, 0, 0);
     const z_axis = p.createVector(0, 0, 1);
     const ambient_light = p.color(40);
     let light_direction = p.createVector(0, 1, 0);
     light_direction = rotate_around(light_direction, x_axis, -Math.PI / 8);
     light_direction = rotate_around(light_direction, z_axis, Math.PI / 8);
-    let background_color = 0;
-    let earth_color = 0;
-    let sphere_color = 0;
-    let equator_color =  0;
-    let light_color = 0;
+
+    p.colorMode(p.HSB);
+    const background_color = p.color(230, 100, 25);
+    const earth_color = p.color(125, 75, 25);
+    const sphere_color = p.color(125, 75, 60);
+    const equator_color = p.color(50, 75, 50);
+    const device_color = p.color(355, 75, 60);
+    const light_color = p.color(0, 0, 100);
 
     // https://stackoverflow.com/a/67468546/547331
     // Rotate one vector (vect) around another (axis) by the specified angle.
@@ -282,6 +292,23 @@ const sketch_orbital = (p) => {
         );
     }
 
+    // https://developer.mozilla.org/en-US/docs/Web/API/Geolocation_API
+    function get_device_location() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition((position) => {
+                // latitude and longitude in radians
+                const lat = radians(position.coords.latitude);
+                const lon = radians(position.coords.longitude);
+
+                device_location = {
+                    x: Math.cos(lat) * Math.cos(lon),
+                    y: Math.cos(lat) * Math.sin(lon),
+                    z: Math.sin(lat)
+                };
+            });
+        }
+    }
+
     p.setup = () => {
         const width = Math.min(
             document.getElementById(SKETCH_ORBITAL_ID).clientWidth,
@@ -290,15 +317,8 @@ const sketch_orbital = (p) => {
         const height = width;
         scale = (height / 2.2) / ISS.orbit;
         p.createCanvas(width, height, p.WEBGL);
-
-        p.colorMode(p.HSB);
-        background_color = p.color(230, 100, 25);
-        earth_color = p.color(125, 75, 25);
-        sphere_color = p.color(125, 75, 60);
-        equator_color = p.color(50, 75, 50);
-        light_color = p.color(0, 0, 100);
-
-        p.frameRate(92/60); //PARAM.frame_rate);
+        p.frameRate(frame_rate);
+        get_device_location();  // if allowed & available; lazy
 
         p.describe("Orbital Earth Sketch");
     }
@@ -312,7 +332,18 @@ const sketch_orbital = (p) => {
         p.rotateX(-Math.PI / 16).rotateZ(Math.PI/16);
         p.noStroke().fill(earth_color).sphere(radius, 24, 24);
         iss.draw_points(p, ISS.orbit * scale, 0, 0, 1.618, sphere_color);
-        equator.draw_orbit(p, EARTH.radius * scale, equator_color);
+        equator.draw_orbit(p, radius, equator_color);
+
+        //add device location, if / when available
+        if (device_location != null) {
+            const from = device_location;
+            earth_rotation += earth_rotation_dt;
+            p.push()
+            p.rotateY(earth_rotation);
+            p.translate(-radius * from.x, radius * from.y, radius * from.z);
+            p.noStroke().fill(device_color).sphere(device_size);
+            p.pop();
+        }
 
         iss.update();
     }
