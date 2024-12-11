@@ -1,5 +1,9 @@
 import '/assets/p5/libraries/p5.min.js';
 
+const SKETCH_PROJECTION_ID = "sketch-projection";
+const SKETCH_SPHERE_ID = "sketch-sphere";
+const SKETCH_ORBITAL_ID = "sketch-orbital";
+
 function radians(x) {
     return Math.PI * x / 180;
 }
@@ -18,8 +22,6 @@ const ISS = {
 
 const PARAM = {
     texture_file: "/assets/orbital/world.topo.bathy.200411.3x5400x2700.jpg",
-    scale2d: 1 / 50,
-    scale3d: 1 / 50,
     frame_rate: 6,
     dt: 2
 };
@@ -157,7 +159,7 @@ const sketch_orbital_projection = (p) => {
     }
 
     p.setup = () => {
-        width = document.getElementById("sketch-orbital-projection").
+        width = document.getElementById(SKETCH_PROJECTION_ID).
             clientWidth;
         height = width / 2;
 
@@ -171,7 +173,6 @@ const sketch_orbital_projection = (p) => {
 
     p.draw = () => {
         p.strokeWeight(1).stroke("black");
-        // p.fill("white").rect(-width / 2, -height / 2, width, height);
         p.texture(earth_texture).rect(-width / 2, -height / 2, width, height);
         p.stroke("red").line(-width / 2, 0, width / 2, 0);
         iss.draw_points(p, width, height);
@@ -181,9 +182,7 @@ const sketch_orbital_projection = (p) => {
 
 const sketch_orbital_sphere = (p) => {
     // canvas dimensions, scaled to radius units
-    const radius = EARTH.radius * PARAM.scale3d;
-    const width = 2.2 * ISS.orbit * PARAM.scale3d;
-    const height = 2.2 * ISS.orbit * PARAM.scale3d;
+    let scale;
 
     const dt = PARAM.dt;
     const n_points = 4 * Math.PI / ISS.period / dt;
@@ -201,6 +200,13 @@ const sketch_orbital_sphere = (p) => {
     }
 
     p.setup = () => {
+        const width = Math.min(
+            document.getElementById(SKETCH_SPHERE_ID).clientWidth,
+            500
+        );
+        const height = width;
+        scale = height / 2.2 / ISS.orbit;
+
         p.createCanvas(width, height, p.WEBGL);
         p.frameRate(PARAM.frame_rate);
         p.texture(earth_texture);
@@ -208,6 +214,7 @@ const sketch_orbital_sphere = (p) => {
     }
 
     p.draw = () => {
+        const radius = EARTH.radius * scale;
         earth_rotation += earth_rotation_dt;
         p.background(0);
         p.noStroke();
@@ -218,7 +225,7 @@ const sketch_orbital_sphere = (p) => {
         p.sphere(radius, 24, 24);
         equator.draw_orbit(p, radius);
         iss.draw_points(
-            p, ISS.orbit * PARAM.scale3d,
+            p, ISS.orbit * scale,
             earth_rotation, earth_rotation_dt
         );
         iss.update();
@@ -277,8 +284,9 @@ const sketch_orbital = (p) => {
 
     p.setup = () => {
         const width = Math.min(
-            document.getElementById("sketch-orbital-projection"). clientWidth,
-            500);
+            document.getElementById(SKETCH_ORBITAL_ID).clientWidth,
+            500
+        );
         const height = width;
         scale = (height / 2.2) / ISS.orbit;
         p.createCanvas(width, height, p.WEBGL);
@@ -296,12 +304,13 @@ const sketch_orbital = (p) => {
     }
 
     p.draw = () => {
+        const radius = EARTH.radius * scale;
         p.background(background_color);
         p.directionalLight(light_color, light_direction).
             directionalLight(light_color, light_direction);
         p.ambientLight(ambient_light);
         p.rotateX(-Math.PI / 16).rotateZ(Math.PI/16);
-        p.noStroke().fill(earth_color).sphere(EARTH.radius * scale, 24, 24);
+        p.noStroke().fill(earth_color).sphere(radius, 24, 24);
         iss.draw_points(p, ISS.orbit * scale, 0, 0, 1.618, sphere_color);
         equator.draw_orbit(p, EARTH.radius * scale, equator_color);
 
@@ -309,8 +318,8 @@ const sketch_orbital = (p) => {
     }
 }
 
-new p5(sketch_orbital_projection, "sketch-orbital-projection");
+new p5(sketch_orbital_projection, SKETCH_PROJECTION_ID);
 
-new p5(sketch_orbital_sphere, "sketch-orbital-sphere");
+new p5(sketch_orbital_sphere, SKETCH_SPHERE_ID);
 
-new p5(sketch_orbital, "sketch-orbital");
+new p5(sketch_orbital, SKETCH_ORBITAL_ID);
