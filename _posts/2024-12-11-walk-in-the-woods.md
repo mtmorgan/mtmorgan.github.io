@@ -5,7 +5,7 @@ date:   2024-12-11
 categories: javascript
 ---
 
-<img src="/assets/walk-in-the-woods/topo-map.jpg" width="100%"/>
+<img src="/assets/walk-in-the-woods/small/topo-map.jpg" width="100%"/>
 
 <div id="sketch-walk-in-the-woods"></div>
 <script 
