@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Bubble"
+title:  "Bubbles"
 date:   2024-10-29
 categories: javascript population-genetics
 ---
@@ -45,7 +45,7 @@ decisions made during development.
 The bubble chart representation is much less frenetic than the grid
 used in the individual-based simulation (I could have summarized the
 individual-based simulations using bubble charts, but then the
-connection to Mondrian would be even less clear). 
+connection to Mondrian would be even less clear).
 
 Originally I set the maximum bubble diameter to 1/2 the minimum width
 or height of the canvas. This meant that new alleles were centered in
@@ -87,7 +87,7 @@ or `const` declarations. Using p5 instances also allows for more than
 one canvas on a page.
 
 [Electric Op]: https://buffaloakg.org/art/exhibitions/electric-op
-[old folly]: /population-genetics/javascript/2024/10/28/boogie-woogie.html
+[old folly]: /javascript/population-genetics/2024/10/28/boogie-woogie.html
 [p5]: https://p5js.org/
 [stdlib]: https://stdlib.io/
-[JavaScript]: /assets/p5/boogie-woogie-bubble.js
+[JavaScript]: https://github.com/mtmorgan/mtmorgan.github.io/blob/main/assets/boogie-woogie/bubble.js

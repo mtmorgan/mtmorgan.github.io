@@ -54,4 +54,4 @@ and subclasses `VerticalLine`, `HorizontalLine`; here's the
 a color wheel.
 
 [p5]: https://p5js.org/
-[JavaScript]: /assets/p5/agnes-martin.js
+[JavaScript]: https://github.com/mtmorgan/mtmorgan.github.io/blob/main/assets/agnes-martin/agnes-martin.js

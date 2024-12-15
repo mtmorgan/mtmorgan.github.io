@@ -51,7 +51,7 @@ in population genetics. The infinite alleles model imagines a
 population of individuals, represented by the alleles at a particular
 genetic locus.  Alleles experience mutation to a novel form. The fate
 of the allele (whether and how quickly it is lost from the population,
-for instance) is determined by purely stochastic processes. 
+for instance) is determined by purely stochastic processes.
 
 There is a kind of dynamic equilibrium between mutation and drift.
 Often a single allele dominates, with a small number of recently
@@ -60,7 +60,7 @@ is replaced by a new allele. I imagined representing a population by a
 grid of squares, each square colored to indicate the allele. Genetic
 drift is visualized by updating the grid to reflect new mutation and
 sampling between generations. The dynamics of new alleles reminded me
-of flickering lights, and of Mondrian's final paintings. 
+of flickering lights, and of Mondrian's final paintings.
 
 I explored simulations of genetic drift while teaching in the 90's,
 and eventually included the art history and simulation in a single
@@ -111,7 +111,7 @@ entertainment and maybe a bit of education.
 
 ## Notes
 
-See the companion [Boogie Woogie Bubble][] post.
+See the companion [Bubbles][] post.
 
 In addition to [p5][], I use the [stdlib][] javascript library (for
 binomial random deviates, and to sample the population).  I also
@@ -119,7 +119,7 @@ needed to learn how to integrate a p5 canvas into the jekyll static
 site generator (adding an 'assets' folder to the root of
 the site with javascript scripts and libraries, and inserting
 `<script>` and `<div>` tags into the markdown for this page). Here's
-the Boogie Woogie [javascript][]. 
+the Boogie Woogie [JavaScript][].
 
 Population genetics and WSU remind me of Richard Gomulkiewicz, to whom
 I dedicate this post.
@@ -130,5 +130,5 @@ I dedicate this post.
 [catalog]: https://assets.moma.org/documents/moma_catalogue_470_300063147.pdf
 [p5]: https://p5js.org/
 [stdlib]: https://stdlib.io/
-[Boogie Woogie Bubble]: /population-genetics/javascript/2024/10/29/boogie-woogie-bubble.html
-[javascript]: /assets/p5/boogie-woogie.js
+[Bubbles]: /javascript/population-genetics/2024/10/29/boogie-woogie-bubble.html
+[JavaScript]: https://github.com/mtmorgan/mtmorgan.github.io/blob/main/assets/boogie-woogie/boogie-woogie.js

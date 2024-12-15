@@ -27,8 +27,8 @@ daylight is not restricted to the northern hemisphere!
 <figure>
     <img alt="Frontispiece, Orbital" src="/assets/orbital/frontispiece.jpeg" />
     <figcaption>
-        Frontispiece, 
-        <a href="https://thebookerprizes.com/the-booker-library/books/orbital">Orbital</a>, 
+        Frontispiece,
+        <a href="https://thebookerprizes.com/the-booker-library/books/orbital">Orbital</a>,
         Samantha Harvey, 2023.
     </figcaption>
 </figure>
@@ -190,6 +190,6 @@ rotation formula from this [StackOverflow][StackOverflow-rotation]
 answer to rotate the light source around the Earth.
 
 [p5]: https://p5js.org/
-[JavaScript]: /assets/orbital/orbital.js
+[JavaScript]: https://github.com/mtmorgan/mtmorgan.github.io/blob/main/assets/orbital/orbital.js
 [StackOverflow-MathJax]: https://stackoverflow.com/a/11093303/547331
 [StackOverflow-rotation]: https://stackoverflow.com/a/67468546/547331
