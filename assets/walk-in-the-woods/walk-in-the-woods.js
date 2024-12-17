@@ -24,7 +24,8 @@ const sketch_walk_in_the_woods = (p5) => {
             max: golden_ratio ** 3,
             n_per_dimension: 3,
             step: golden_ratio ** (1 / (5 * frame_rate))
-        };
+        },
+        wood_at_frame_scale = 5;;
 
     let canvas_height = 0,
         canvas_width = 0,
@@ -32,6 +33,13 @@ const sketch_walk_in_the_woods = (p5) => {
         img_height = 0,
         img_width = 0,
         woods = structuredClone(WOODS); // Mutable
+
+    // Add 'at_frame' to wood
+    const wood_at_frame = (wood) => {
+        wood.at_frame = Math.floor(wood_at_frame_scale * wood.StartTime);
+        return wood;
+    };
+
 
     // Random x- and y-offsets
     const random_shuffle = (array, start = 0, end = array.length - 1) => {
@@ -74,13 +82,19 @@ const sketch_walk_in_the_woods = (p5) => {
     })(image_scale.n_per_dimension);
 
     // Image load & draw
-    const image_load =  (json) => ({
-        at_frame: Math.floor(5 * json.StartTime),
-        image: p5.loadImage(IMG_PREFIX + json.FileName),
-        scale: image_scale.begin,
-        x_offset: random_offset.x(),
-        y_offset: random_offset.y()
-    });
+    const image_load = (wood) => {
+
+        // Push object onto 'images' array asynchronously; is this ok?
+        p5.loadImage(IMG_PREFIX + wood.FileName, (img) => {
+            images.push({
+                image: img,
+                scale: image_scale.begin,
+                x_offset: random_offset.x(),
+                y_offset: random_offset.y()
+            });
+        });
+
+    };
 
     const image_draw = (img) => {
 
@@ -121,21 +135,18 @@ const sketch_walk_in_the_woods = (p5) => {
         p5.pop();
 
         img.scale *= image_scale.step;
+        return img;
 
     }
 
     // P5
-    p5.preload = () => {
+    p5.setup = () => {
 
         canvas_width = get_width(SKETCH_WALK_IN_THE_WOODS_ID);
         canvas_height = canvas_width / aspect_ratio;
         img_width = canvas_width / image_scale.n_per_dimension;
         img_height = img_width / aspect_ratio;
-        images = woods.map(image_load);
-
-    }
-
-    p5.setup = () => {
+        woods = woods.map(wood_at_frame);
 
         p5.createCanvas(canvas_width, canvas_height);
         p5.frameRate(frame_rate);
@@ -147,23 +158,27 @@ const sketch_walk_in_the_woods = (p5) => {
 
     p5.draw = () => {
 
-        // Remove completed images
-        images =
-            images.
-            filter((img) => img.scale < image_scale.end);
-        
-        // Draw
         p5.background("black");
 
-        // Images
-        images.
-            filter((img) => img.at_frame <= p5.frameCount).
-            forEach(image_draw);
+        // Load wood into image queue
+        woods.
+            filter(wood => wood.at_frame <= p5.frameCount).
+            forEach(image_load);
 
-        // Done?
-        if (images.length === 0) {
+        // Remove dead wood
+        woods = woods.
+            filter(wood => wood.at_frame > p5.frameCount);
+
+        // Display images, and remove dead images
+        images =
+            images.map(image_draw).
+            filter(img => img.scale <= image_scale.end);
+
+        // Done
+        if ((woods.length == 0) && (images.length == 0)) {
             p5.noLoop();
         }
+
     }
 
 }
