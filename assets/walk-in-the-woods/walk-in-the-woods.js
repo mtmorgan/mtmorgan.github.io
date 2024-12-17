@@ -1,55 +1,62 @@
-import '/assets/p5/libraries/p5.min.js';
-import woods from "/assets/walk-in-the-woods/woods.json" with { type: "json" };
+import "/assets/p5/libraries/p5.min.js";
+import WOODS from "/assets/walk-in-the-woods/woods.json" with { type: "json" };
 
-const SKETCH_WALK_IN_THE_WOODS_ID = "sketch-walk-in-the-woods";
-const IMG_PREFIX = "/assets/walk-in-the-woods/small/"
+const IMG_PREFIX = "/assets/walk-in-the-woods/small/",
+      SKETCH_WALK_IN_THE_WOODS_ID = "sketch-walk-in-the-woods";
 
-function get_width(id, max_width) {
+const get_width = (id, max_width) => {
+
     const id_width = document.getElementById(id).clientWidth;
-    return max_width === undefined ? id_width : Math.min(id_width, max_width);
+    return typeof max_width === "undefined" ?
+        id_width : Math.min(id_width, max_width);
+
 }
 
-const sketch_walk_in_the_woods = (p) => {
-    let canvas_width;
-    let canvas_height;
-    const golden_ratio = (1 + Math.sqrt(5)) /2;
-    const aspect_ratio = 3024 / 4032;
-    const frame_rate = 24;
+const sketch_walk_in_the_woods = (p5) => {
 
-    let img_width;
-    let img_height;
-    const image_scale = {
-        n_per_row: 5,
-        min: 1 / (golden_ratio ** 3),
-        max: golden_ratio ** 3,
-        end: golden_ratio ** 5,
-        step: (golden_ratio ** (1/(5 * frame_rate)))
-    };
-    let image_queue;
+    const aspect_ratio = 3024 / 4032,
+        background_color = p5.color(0, 0, 0), // Black
+        frame_rate = 24,
+        golden_ratio = (1 + Math.sqrt(5)) / 2,
+        image_scale = {
+            begin: 1 / golden_ratio ** 3,
+            end: golden_ratio ** 5,
+            max: golden_ratio ** 3,
+            n_per_dimension: 3,
+            step: golden_ratio ** (1 / (5 * frame_rate))
+        };
 
-    p.colorMode(p.HSB);
-    const background_color = p.color(0, 0, 0); // black
+    let canvas_height = 0,
+        canvas_width = 0,
+        images = [],
+        img_height = 0,
+        img_width = 0,
+        woods = structuredClone(WOODS); // Mutable
 
-    // random x- and y-offsets
-    function random_shuffle(array, start = 0, end = array.length - 1) {
-        // https://stackoverflow.com/a/12646864/547331 +
-        // Google AI for start /end
-        for (let i = end; i >= start; i--) {
+    // Random x- and y-offsets
+    const random_shuffle = (array, start = 0, end = array.length - 1) => {
+
+        // See https://stackoverflow.com/a/12646864/547331 + Google AI
+        for (let i = end; i >= start; i -= 1) {
             const j = Math.floor(Math.random() * (i - start + 1)) + start;
             [array[i], array[j]] = [array[j], array[i]];
         }
+
     };
 
-    const random_offset = (function(n_per_row) {
-        // avoid horizontal overlap with offset columns;
-        let row_offsets = [...Array(n_per_row).keys()].map((x) => x + 1/2);
+    const random_offset = ((n_per_dim) => {
+
+        // Avoid horizontal overlap with offset columns;
+        const col_offsets = [...Array(n_per_dim).keys()].map((x) => x + 1/2),
+            row_offsets = [...Array(n_per_dim).keys()].map((x) => x + 1/2);
+        random_shuffle(col_offsets);
         random_shuffle(row_offsets);
 
         return {
             x() {
-                // avoid choosing from the same column twice in
-                // succesion by inserting the offset into the
-                // (re-shuffled) tail of the array
+                // Avoid choosing from the same column twice in succesion
+                // by inserting the offset into the (re-shuffled) tail of
+                // the array
                 const offset = row_offsets.shift();
                 row_offsets.push(offset);
                 random_shuffle(row_offsets, 1)
@@ -57,93 +64,108 @@ const sketch_walk_in_the_woods = (p) => {
             },
 
             y() {
-                const y_range = canvas_height - img_height;
-                return Math.floor(p.random(y_range) + img_height / 2);
+                const offset = col_offsets.shift();
+                col_offsets.push(offset);
+                random_shuffle(col_offsets, 1)
+                return img_height * offset;
             }
         };
-    })(image_scale.n_per_row);
 
-    // image load & draw
-    function image_load(json) {
-        return {
-            scale: image_scale.min,
-            image: p.loadImage(IMG_PREFIX + json.FileName),
-            x_offset: random_offset.x(),
-            y_offset: random_offset.y(),
-            start_at_frame: Math.floor(5 * json.StartTime)
-        };
-    }
+    })(image_scale.n_per_dimension);
 
-    function image_draw(img) {
-        const dest_scale =
-              img.scale < 1 ? img.scale : 1;
-        const dest_width = img_width * dest_scale;
-        const dest_height = img_height * dest_scale;
-        const dest_x_offset = img.x_offset - dest_width / 2;
-        const dest_y_offset = img.y_offset - dest_height / 2;
+    // Image load & draw
+    const image_load =  (json) => ({
+        at_frame: Math.floor(5 * json.StartTime),
+        image: p5.loadImage(IMG_PREFIX + json.FileName),
+        scale: image_scale.begin,
+        x_offset: random_offset.x(),
+        y_offset: random_offset.y()
+    });
 
-        const source_scale =
-              img.scale < 1 ? 1: Math.min(img.scale, image_scale.max);
-        const source_width = img.image.width / source_scale;
-        const source_height = img.image.height / source_scale
-        const source_x_offset = img.image.width / 2 - source_width / 2;
-        const source_y_offset = img.image.height / 2 - source_height / 2;
+    const image_draw = (img) => {
 
-        p.push();               // limit tint() to this image
+        const dest_scale = Math.min(img.scale, 1),
+            source_scale = Math.max(1, Math.min(img.scale, image_scale.max)),
+
+            dest_height = img_height * dest_scale,
+            dest_width = img_width * dest_scale,
+            dest_x_offset = img.x_offset - dest_width / 2,
+            dest_y_offset = img.y_offset - dest_height / 2,
+
+            source_height = img.image.height / source_scale,
+            source_width = img.image.width / source_scale,
+            source_x_offset = img.image.width / 2 - source_width / 2,
+            source_y_offset = img.image.height / 2 - source_height / 2;
+
+        // Limit tint() to this image
+        p5.push();
 
         if (img.scale > image_scale.max) {
-            // fade full-sized images
+            // Fade full-sized images
             const alpha = 1 -
                   (img.scale - image_scale.max) /
                   (image_scale.end - image_scale.max);
-            p.tint(255, alpha);
+            p5.tint(255, alpha);
         }
 
-        p.image(
+        p5.strokeWeight(1).fill(background_color).
+            rect(dest_x_offset, dest_y_offset, dest_width, dest_height);
+        p5.image(
             img.image,
-            // desination
+            // Desination
             dest_x_offset, dest_y_offset, dest_width, dest_height,
-            // source
+            // Source
             source_x_offset, source_y_offset, source_width, source_height
         );
 
-        p.pop();
+        p5.pop();
 
         img.scale *= image_scale.step;
+
     }
 
-    // p5
-    p.preload = () => {
+    // P5
+    p5.preload = () => {
+
         canvas_width = get_width(SKETCH_WALK_IN_THE_WOODS_ID);
-        canvas_height = canvas_width / golden_ratio;
-        img_width = canvas_width / image_scale.n_per_row;
+        canvas_height = canvas_width / aspect_ratio;
+        img_width = canvas_width / image_scale.n_per_dimension;
         img_height = img_width / aspect_ratio;
-        image_queue = woods.map(image_load);
+        images = woods.map(image_load);
+
     }
 
-    p.setup = () => {
-        p.createCanvas(canvas_width, canvas_height);
-        p.frameRate(frame_rate);
-        p.describe("A Walk in the Woods");
+    p5.setup = () => {
+
+        p5.createCanvas(canvas_width, canvas_height);
+        p5.frameRate(frame_rate);
+        p5.colorMode(p5.HSB);
+
+        p5.describe("A Walk in the Woods");
+
     }
 
-    p.draw = () => {
-        p.background("black");
+    p5.draw = () => {
 
-        // draw
-        image_queue.
-            filter((img) => img.start_at_frame <= p.frameCount).
+        // Remove completed images
+        images =
+            images.
+            filter((img) => img.scale < image_scale.end);
+        
+        // Draw
+        p5.background("black");
+
+        // Images
+        images.
+            filter((img) => img.at_frame <= p5.frameCount).
             forEach(image_draw);
 
-        // filter completed
-        image_queue =
-            image_queue.
-            filter((img) => img.scale <= image_scale.end);
-
-        // done?
-        if (image_queue.length == 0)
-            p.noLoop();
+        // Done?
+        if (images.length === 0) {
+            p5.noLoop();
+        }
     }
+
 }
 
 new p5(sketch_walk_in_the_woods, SKETCH_WALK_IN_THE_WOODS_ID);
