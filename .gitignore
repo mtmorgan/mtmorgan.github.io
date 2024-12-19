@@ -1,6 +1,4 @@
-_site
-.sass-cache
-.jekyll-cache
-.jekyll-metadata
-vendor
 .ruby-version
+assets/walk-in-the-woods/IMG*
+assets/walk-in-the-woods/small/
+_site/
