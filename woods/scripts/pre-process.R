@@ -1,10 +1,10 @@
 library(dplyr)
 
-img_path <- "~/a/git/mtmorgan.github.io/assets/walk-in-the-woods/"
+img_path <- "~/a/git/mtmorgan.github.io/assets/walk-in-the-woods/small"
 json_path <- file.path(img_path, "woods.json")
 imgs <- dir(img_path, pattern = "IMG*", full.names = TRUE)
 
-tbl <-
+img_tbl <-
     exiftoolr::exif_read(
         imgs,
         tags = c(
@@ -25,10 +25,25 @@ tbl <-
     )
 
 ## all are 3024 x 4032 pixels, 72 pixels per inch
-tbl |>
+img_tbl |>
     select(ImageWidth, ImageHeight, XResolution) |>
     distinct()
 
+## find links to files
+library(googledrive)
+
+google_folder <- "walk-in-the-woods"
+content <- drive_ls(google_folder, pattern = "IMG")
+
+link_tbl <-
+    content |>
+    mutate(URL = drive_link(content)) |>
+    select(name, URL)
+
+tbl <- left_join(img_tbl, link_tbl, by = c(FileName = "name"))
+
+glimpse(tbl)
+
 tbl |>
-    select(FileName, CreateDate, StartTime, ElapsedTime) |>
+    select(FileName, StartTime, ElapsedTime, URL) |>
     jsonlite::write_json(json_path)

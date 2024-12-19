@@ -1,7 +1,7 @@
 import "/assets/p5/libraries/p5.min.js";
-import WOODS from "/assets/walk-in-the-woods/woods.json" with { type: "json" };
+import WOODS from "./woods.json" with { type: "json" };
 
-const IMG_PREFIX = "/assets/walk-in-the-woods/small/",
+const IMG_PREFIX = "./images/",
     SKETCH_WALK_IN_THE_WOODS_ID = "sketch-walk-in-the-woods";
 
 const get_width = (id, max_width) => {
