@@ -105,14 +105,6 @@ class Woods {
 
     }
 
-    draw(p5) {
-
-        this.load_new_images(p5.frameCount, p5.loadImage);
-        this.draw_images(p5);
-        this.unload_expired_images();
-
-    }
-
     draw_image(p5, img) {
         const dest_scale = Math.min(img.scale, 1),
             dest_height = this.image_size.height * dest_scale,

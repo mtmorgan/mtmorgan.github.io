@@ -12,6 +12,6 @@ uses [p5][] to load and display images of tree trunks taken while
 while walking through the woods on our propoerty near Caledon East,
 Ontario.
 
-[woods]: https://mtmorgan.github.io/woods/
+[woods]: /woods/
 [p5]: https://p5js.org
 
