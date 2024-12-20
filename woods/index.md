@@ -9,7 +9,7 @@ date: 2024-12-11
 We have some rural property outside Caledon East, Ontario. It was
 purchased by Joan's grandfather after the Second World War. It was a
 100 acre more-or-less square lot, but is now an 'L'-shaped 55 acres,
-outline in green in the image below. There are two cabins on the
+outlined in green in the image below. There are two cabins on the
 property. The all-season 'Hill' cabin is to the west, the summer
 'Pond' cabin to the south. The Pond cabin is adjacent to an artificial
 pond Joan's grandfather built after [Hurricane Hazel][hazel] in 1954.
@@ -61,7 +61,6 @@ fixed 4 x 2 grid. Choice of cells is adjusted to avoid overlap between
 successive images. The sequence lasts about 20 minutes, I think...
 
 <div id="sketch-walk-in-the-woods"></div>
-<script type="module" src="./walk-in-the-woods.js"></script>
 
 I originally introduced images at random locations. They would often
 grow over each other, making it difficult to focus on textures when
@@ -70,6 +69,9 @@ display seems too rigid, something that my phone might do when
 reviewing an album! I will iterate on this...
 
 # Walking again
+
+<div id="sketch-walk-in-the-woods-again"></div>
+<script type="module" src="./walk-in-the-woods.js"></script>
 
 # Notes
 
