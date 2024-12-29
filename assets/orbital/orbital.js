@@ -241,16 +241,23 @@ const sketch_orbital = (p) => {
     const frame_rate = 92 / 60;
     const iss =
           new Orbit3D(ISS.period, radians(90) - ISS.inclination, dt, n_points);
+    const sphere_scale = 1.618;
 
     const equator_n_points = 2 * Math.PI / EARTH.period / dt;
     const equator =
           new Orbit3D(EARTH.period, radians(90), dt, equator_n_points);
 
-    // set when get_location() eventually resolves
-    let device_location;
+    // Updated when get_location() eventually resolves; defaul Hill cabin
+    let device_location = {
+        x: -0.22181507267591796,
+        y: -0.7471665585537772,
+        z: 0.6265302924142472
+    };
     const device_size = 8;
     const earth_rotation_dt = dt * EARTH.period;
     let earth_rotation = 0;
+    // Orientation away from 'reality'
+    const akimbo = -Math.PI / 64;
 
     // colors
     const x_axis = p.createVector(1, 0, 0);
@@ -263,9 +270,9 @@ const sketch_orbital = (p) => {
     p.colorMode(p.HSB);
     const background_color = p.color(230, 100, 25);
     const earth_color = p.color(125, 75, 25);
-    const sphere_color = p.color(125, 75, 60);
-    const equator_color = p.color(50, 75, 50);
-    const device_color = p.color(355, 75, 60);
+    const sphere_color = p.color(125, 75, 70);
+    const equator_color = p.color(125, 75, 40);
+    const device_color = p.color(125, 75, 50);
     const light_color = p.color(0, 0, 100);
 
     // https://stackoverflow.com/a/67468546/547331
@@ -294,7 +301,8 @@ const sketch_orbital = (p) => {
 
     // https://developer.mozilla.org/en-US/docs/Web/API/Geolocation_API
     function get_device_location() {
-        if (navigator.geolocation) {
+        if (navigator.onLine && navigator.geolocation) {
+            device_location = null;
             navigator.geolocation.getCurrentPosition((position) => {
                 // latitude and longitude in radians
                 const lat = radians(position.coords.latitude);
@@ -326,12 +334,12 @@ const sketch_orbital = (p) => {
     p.draw = () => {
         const radius = EARTH.radius * scale;
         p.background(background_color);
+        p.rotateX(akimbo).rotateY(akimbo).rotateZ(EARTH.inclination);
         p.directionalLight(light_color, light_direction).
             directionalLight(light_color, light_direction);
         p.ambientLight(ambient_light);
-        p.rotateX(-Math.PI / 16).rotateZ(Math.PI/16);
-        p.noStroke().fill(earth_color).sphere(radius, 24, 24);
-        iss.draw_points(p, ISS.orbit * scale, 0, 0, 1.618, sphere_color);
+        //  p.noStroke().fill(earth_color).sphere(radius, 24, 24);
+        iss.draw_points(p, ISS.orbit * scale, 0, 0, sphere_scale, sphere_color);
         equator.draw_orbit(p, radius, equator_color);
 
         //add device location, if / when available
