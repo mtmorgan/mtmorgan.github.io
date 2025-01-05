@@ -380,7 +380,6 @@ class WalkAgain extends Woods {
               width = this.image_size.width,
               height_idx = (Math.random() * 4 | 0) / 4;
 
-        console.log(height_idx);
         return [
             width / 2 | 0,
             (this.canvas.height - height) * height_idx + height / 2
