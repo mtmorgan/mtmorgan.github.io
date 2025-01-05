@@ -8,6 +8,8 @@ categories: javascript
 <!-- mathjax, see https://stackoverflow.com/a/11093303/547331 -->
 <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
+(updated 2024-12-30)
+
 This continues my exploration of JavaScript.
 
 ## Motivation
@@ -164,10 +166,11 @@ generated from November data, so is not quite correct.
 
 [NASA-earth-images]: https://visibleearth.nasa.gov/images/73884/november-blue-marble-next-generation-w-topography-and-bathymetry
 
-An abstraction has the earth's sphere, equator, and orbit. The earth
-is illuminated from the top so that 'daylight is in the northern
-hemisphere'. The space station orbit pulses at 92 beats per minute,
-fading into the earth. The axial tilt of the earth is a little akimbo.
+An abstraction has the earth's equator, orbit, and the location of the
+visitor's internet access. The earth is illuminated from the top so
+that 'daylight is in the northern hemisphere'. The space station orbit
+pulses at 92 beats per minute. The axial tilt of the earth is a little
+akimbo.
 
 <div id="sketch-orbital"></div>
 <script type="module" src="/assets/orbital/orbital.js"></script>
