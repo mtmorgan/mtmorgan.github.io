@@ -2,6 +2,7 @@
 title: "A Walk in the Woods"
 layout: page
 date: 2024-12-11
+css: /assets/leaflet/leaflet.css
 ---
 
 # The woods
@@ -33,7 +34,6 @@ trail is extracted from GPS location information embedded in
 photographs.
 
 <div id="map"></div>
-<link rel="stylesheet" href="/assets/leaflet/leaflet.css" />
 <script type="module" src="./maps.js"></script>
 
 [hazel]: https://en.wikipedia.org/wiki/Hurricane_Hazel
