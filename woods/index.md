@@ -32,12 +32,9 @@ The map and satellite imagery below show the property and trail. The
 trail is extracted from GPS location information embedded in
 photographs.
 
-<link rel="stylesheet" href="/assets/leaflet/leaflet.css" />
-<script src="/assets/leaflet/leaflet.js"></script>
-<script src="/assets/leaflet-gpx-2.1.2/gpx.js"></script>
-<script type="module" src="./maps.js"></script>
-
 <div id="map"></div>
+<link rel="stylesheet" href="/assets/leaflet/leaflet.css" />
+<script type="module" src="./maps.js"></script>
 
 [hazel]: https://en.wikipedia.org/wiki/Hurricane_Hazel
 
@@ -79,13 +76,11 @@ to keep them more separate.
 # Notes
 
 Maps are displayed using [leafletjs][]; the track is extracted from
-photos with [exiftool][] and displayed using [leaflet-gpx][]. Property
-boundaries were extracted 'by hand' from the Assessment layer of the
-topographic maps available at Ontario's [Ministry of Natural
-Resources][mnr].
+photos with [exiftool][]. Property boundaries were extracted 'by hand'
+from the Assessment layer of the topographic maps available at
+Ontario's [Ministry of Natural Resources][mnr].
 
 [leafletjs]: https://leafletjs.com/
-[leaflet-gpx]: https://github.com/mpetazzoni/leaflet-gpx>
 [exiftool]: https://exiftool.org/
 [mnr]: https://www.ontario.ca/page/topographic-maps
 

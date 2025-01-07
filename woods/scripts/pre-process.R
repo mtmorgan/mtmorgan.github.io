@@ -72,12 +72,10 @@ tbl |> print(n = Inf)
 plot(GPSLatitude ~ GPSLongitude, tbl, type = "b", pch = "")
 with(tbl, text(GPSLongitude, GPSLatitude, ImageDescription))
 
-## Create GPX file
-## https://exiftool.org/geotag.html#Inverse
-## https://www.topografix.com/gpx/1/1/
-gpx_fmt <- "/Users/mtmorgan/a/git/mtmorgan.github.io/woods/scripts/gpx.fmt"
-gpx_file <- file.path(dirname(img_path), "another.gpx")
+## Create geoJSON file https://exiftool.org/forum/index.php?topic=11824.0
+geojson_fmt <- "/Users/mtmorgan/a/git/mtmorgan.github.io/woods/scripts/geojson.fmt"
+geojson_file <- file.path(dirname(img_path), "another.geojson")
 exiftoolr::exif_call(
-               args = c("-fileOrder", "createdate", "-p", gpx_fmt, img_path),
-               stdout = gpx_file
-           )
+    args = c("-fileOrder", "createdate", "-p", geojson_fmt, img_path),
+    stdout = geojson_file
+)

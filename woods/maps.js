@@ -1,3 +1,5 @@
+import * as L from '/assets/leaflet/leaflet-src.esm.js';
+
 // Common map elements
 
 const map_view = [43.89730, -79.8758];
@@ -29,19 +31,33 @@ const topo = L.tileLayer(
 
 // GPS track
 
-const gpx = new L.GPX('/woods/another.gpx', {
-    async: true,
-    markers: {
-        endIcon: undefined
-    },
-    polyline_options: {
-        color: gps_color
-    }
+const as_LineString = (gps) => {
+    let coordinates = gps.features
+        .filter(feature => typeof feature.geometry != "undefined")
+        .map(feature => feature.geometry.coordinates);
+    return {
+        type: "LineString",
+        coordinates: coordinates
+    };
+}
+
+const gps_track = await fetch('/woods/another.geojson')
+    .then(response => response.json())
+    .catch(error => console.error("reading GPS track: ", error));
+
+const trail_start = new L.geoJSON(
+    gps_track.features.find(feature => typeof feature.geometry != "undefined")
+);
+
+const trail_track = new L.geoJSON(as_LineString(gps_track), {
+    color: gps_color
 });
 
-// GEOjson (lot / concession boundaries)
+const trail = L.featureGroup([trail_start, trail_track]);
 
-let lot_boundaries = {
+// Lot boundaries
+
+const lot_boundaries = {
     type: "Feature",
     geometry: {
         type: "Polygon",
@@ -58,7 +74,7 @@ let lot_boundaries = {
     }
 };
 
-let lot = L.geoJSON(lot_boundaries, {
+const lot = L.geoJSON(lot_boundaries, {
     color: lot_color,
     weight: 1,
     fillOpacity: 0
@@ -69,7 +85,7 @@ let lot = L.geoJSON(lot_boundaries, {
 const map = L.map('map', {
     center: map_view,
     zoom: map_zoom,
-    layers: [topo, gpx, lot]
+    layers: [topo, trail, lot]
 });
 
 // Layer control
@@ -80,4 +96,3 @@ const maps = {
 };
 
 const layer_control = L.control.layers(maps).addTo(map);
-
