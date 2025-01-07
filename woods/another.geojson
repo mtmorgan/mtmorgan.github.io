@@ -1,0 +1,370 @@
+{
+    "type": "FeatureCollection",
+    "features": [
+        { "type": "Feature", "properties": {} }
+        ,
+        {
+            "type": "Feature",
+            "properties": {
+                "filename": "IMG_1299.jpeg",
+                "datetime": "2024-12-30T20:05:01Z",
+                "imagedescription": "Hill Cabin"
+            },
+            "geometry": {
+                "type": "Point",
+                "coordinates": [ -79.8792277777778, 43.8976944444444 ]
+            }
+        }
+ 
+        ,
+        {
+            "type": "Feature",
+            "properties": {
+                "filename": "IMG_1302.jpeg",
+                "datetime": "2024-12-30T20:09:52Z",
+                "imagedescription": "Stream"
+            },
+            "geometry": {
+                "type": "Point",
+                "coordinates": [ -79.8790138888889, 43.8972055555556 ]
+            }
+        }
+ 
+        ,
+        {
+            "type": "Feature",
+            "properties": {
+                "filename": "IMG_1303.jpeg",
+                "datetime": "2024-12-30T20:11:17Z",
+                "imagedescription": "First Bridge"
+            },
+            "geometry": {
+                "type": "Point",
+                "coordinates": [ -79.878625, 43.8972972222222 ]
+            }
+        }
+ 
+        ,
+        {
+            "type": "Feature",
+            "properties": {
+                "filename": "IMG_1304.jpeg",
+                "datetime": "2024-12-30T20:12:15Z",
+                "imagedescription": "Hillcrest"
+            },
+            "geometry": {
+                "type": "Point",
+                "coordinates": [ -79.8783861111111, 43.8966638888889 ]
+            }
+        }
+ 
+        ,
+        {
+            "type": "Feature",
+            "properties": {
+                "filename": "IMG_1306.jpeg",
+                "datetime": "2024-12-30T20:15:49Z",
+                "imagedescription": "Split Rail"
+            },
+            "geometry": {
+                "type": "Point",
+                "coordinates": [ -79.8774722222222, 43.8963888888889 ]
+            }
+        }
+ 
+        ,
+        {
+            "type": "Feature",
+            "properties": {
+                "filename": "IMG_1308.jpeg",
+                "datetime": "2024-12-30T20:20:15Z",
+                "imagedescription": "Pond"
+            },
+            "geometry": {
+                "type": "Point",
+                "coordinates": [ -79.87625, 43.8968277777778 ]
+            }
+        }
+ 
+        ,
+        {
+            "type": "Feature",
+            "properties": {
+                "filename": "IMG_1309.jpeg",
+                "datetime": "2025-01-04T17:08:33Z",
+                "imagedescription": "Plantation"
+            },
+            "geometry": {
+                "type": "Point",
+                "coordinates": [ -79.8760277777778, 43.8961944444444 ]
+            }
+        }
+ 
+        ,
+        {
+            "type": "Feature",
+            "properties": {
+                "filename": "IMG_1310.jpeg",
+                "datetime": "2024-12-30T20:23:14Z",
+                "imagedescription": "Trail Junction"
+            },
+            "geometry": {
+                "type": "Point",
+                "coordinates": [ -79.8757777777778, 43.8960416666667 ]
+            }
+        }
+ 
+        ,
+        {
+            "type": "Feature",
+            "properties": {
+                "filename": "IMG_1311.jpeg",
+                "datetime": "2024-12-30T20:29:44Z",
+                "imagedescription": "Southern Fence"
+            },
+            "geometry": {
+                "type": "Point",
+                "coordinates": [ -79.8748861111111, 43.895875 ]
+            }
+        }
+ 
+        ,
+        {
+            "type": "Feature",
+            "properties": {
+                "filename": "IMG_1312.jpeg",
+                "datetime": "2024-12-30T20:33:40Z",
+                "imagedescription": "Girl's Place"
+            },
+            "geometry": {
+                "type": "Point",
+                "coordinates": [ -79.8739166666667, 43.8971638888889 ]
+            }
+        }
+ 
+        ,
+        {
+            "type": "Feature",
+            "properties": {
+                "filename": "IMG_1313.jpeg",
+                "datetime": "2024-12-30T20:36:31Z",
+                "imagedescription": "Big Old Tree"
+            },
+            "geometry": {
+                "type": "Point",
+                "coordinates": [ -79.8731222222222, 43.8975944444444 ]
+            }
+        }
+ 
+        ,
+        {
+            "type": "Feature",
+            "properties": {
+                "filename": "IMG_1314.jpeg",
+                "datetime": "2024-12-30T20:38:58Z",
+                "imagedescription": "Banyan Tree"
+            },
+            "geometry": {
+                "type": "Point",
+                "coordinates": [ -79.8728472222222, 43.897975 ]
+            }
+        }
+ 
+        ,
+        {
+            "type": "Feature",
+            "properties": {
+                "filename": "IMG_1315.jpeg",
+                "datetime": "2024-12-30T20:39:59Z",
+                "imagedescription": "Tamara Tree"
+            },
+            "geometry": {
+                "type": "Point",
+                "coordinates": [ -79.8725444444444, 43.8982111111111 ]
+            }
+        }
+ 
+        ,
+        {
+            "type": "Feature",
+            "properties": {
+                "filename": "IMG_1317.jpeg",
+                "datetime": "2024-12-30T20:42:26Z",
+                "imagedescription": "New Bridge"
+            },
+            "geometry": {
+                "type": "Point",
+                "coordinates": [ -79.8723972222222, 43.8985555555556 ]
+            }
+        }
+ 
+        ,
+        {
+            "type": "Feature",
+            "properties": {
+                "filename": "IMG_1318.jpeg",
+                "datetime": "2024-12-30T20:48:33Z",
+                "imagedescription": "Pecker Tree"
+            },
+            "geometry": {
+                "type": "Point",
+                "coordinates": [ -79.8730861111111, 43.8990666666667 ]
+            }
+        }
+ 
+        ,
+        {
+            "type": "Feature",
+            "properties": {
+                "filename": "IMG_1320.jpeg",
+                "datetime": "2024-12-30T20:54:37Z",
+                "imagedescription": "Wishbone Tree"
+            },
+            "geometry": {
+                "type": "Point",
+                "coordinates": [ -79.8742361111111, 43.8996916666667 ]
+            }
+        }
+ 
+        ,
+        {
+            "type": "Feature",
+            "properties": {
+                "filename": "IMG_1322.jpeg",
+                "datetime": "2024-12-30T20:56:37Z",
+                "imagedescription": "Logger's Cabin"
+            },
+            "geometry": {
+                "type": "Point",
+                "coordinates": [ -79.8746333333333, 43.8995888888889 ]
+            }
+        }
+ 
+        ,
+        {
+            "type": "Feature",
+            "properties": {
+                "filename": "IMG_1323.jpeg",
+                "datetime": "2024-12-30T21:00:26Z",
+                "imagedescription": "Esker "
+            },
+            "geometry": {
+                "type": "Point",
+                "coordinates": [ -79.8747944444444, 43.8992583333333 ]
+            }
+        }
+ 
+        ,
+        {
+            "type": "Feature",
+            "properties": {
+                "filename": "IMG_1324.jpeg",
+                "datetime": "2024-12-30T21:02:43Z",
+                "imagedescription": "Hardwood Edge"
+            },
+            "geometry": {
+                "type": "Point",
+                "coordinates": [ -79.8749305555556, 43.8989916666667 ]
+            }
+        }
+ 
+        ,
+        {
+            "type": "Feature",
+            "properties": {
+                "filename": "IMG_1325.jpeg",
+                "datetime": "2024-12-30T21:04:44Z",
+                "imagedescription": "Third Stream"
+            },
+            "geometry": {
+                "type": "Point",
+                "coordinates": [ -79.8750916666667, 43.8984527777778 ]
+            }
+        }
+ 
+        ,
+        {
+            "type": "Feature",
+            "properties": {
+                "filename": "IMG_1326.jpeg",
+                "datetime": "2024-12-30T21:08:16Z",
+                "imagedescription": "Cedar / Hemlock"
+            },
+            "geometry": {
+                "type": "Point",
+                "coordinates": [ -79.8756416666667, 43.898175 ]
+            }
+        }
+ 
+        ,
+        {
+            "type": "Feature",
+            "properties": {
+                "filename": "IMG_1327.jpeg",
+                "datetime": "2024-12-30T21:14:40Z",
+                "imagedescription": "Bog End"
+            },
+            "geometry": {
+                "type": "Point",
+                "coordinates": [ -79.8765722222222, 43.8977055555556 ]
+            }
+        }
+ 
+        ,
+        {
+            "type": "Feature",
+            "properties": {
+                "filename": "IMG_1328.jpeg",
+                "datetime": "2024-12-30T21:17:09Z",
+                "imagedescription": "Big House Trail"
+            },
+            "geometry": {
+                "type": "Point",
+                "coordinates": [ -79.8767472222222, 43.897625 ]
+            }
+        }
+ 
+        ,
+        {
+            "type": "Feature",
+            "properties": {
+                "filename": "IMG_1329.jpeg",
+                "datetime": "2024-12-30T21:20:07Z",
+                "imagedescription": "Resting Place"
+            },
+            "geometry": {
+                "type": "Point",
+                "coordinates": [ -79.8767916666667, 43.8972583333333 ]
+            }
+        }
+ 
+        ,
+        {
+            "type": "Feature",
+            "properties": {
+                "filename": "IMG_1330.jpeg",
+                "datetime": "2024-12-30T21:25:42Z",
+                "imagedescription": "Hemlock"
+            },
+            "geometry": {
+                "type": "Point",
+                "coordinates": [ -79.8778083333333, 43.8973305555556 ]
+            }
+        }
+ 
+        ,
+        {
+            "type": "Feature",
+            "properties": {
+                "filename": "IMG_1331.jpeg",
+                "datetime": "2024-12-30T21:31:32Z",
+                "imagedescription": "First Bridge"
+            },
+            "geometry": {
+                "type": "Point",
+                "coordinates": [ -79.8786388888889, 43.8971944444444 ]
+            }
+        }
+ 
+    ]
+}

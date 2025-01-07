@@ -1,0 +1,21 @@
+#[HEAD]{
+#[HEAD]    "type": "FeatureCollection",
+#[HEAD]    "features": [
+#[HEAD]        { "type": "Feature", "properties": {} }
+#[IF]  $gpslatitude $gpslongitude
+#[BODY]        ,
+#[BODY]        {
+#[BODY]            "type": "Feature",
+#[BODY]            "properties": {
+#[BODY]                "filename": "$filename",
+#[BODY]                "datetime": "${gpsdatetime#;my ($ss)=/\.\d+/g;DateFmt("%Y-%m-%dT%H:%M:%SZ");s/Z/${ss}Z/ if $ss}",
+#[BODY]                "imagedescription": "$imagedescription"
+#[BODY]            },
+#[BODY]            "geometry": {
+#[BODY]                "type": "Point",
+#[BODY]                "coordinates": [ $gpslongitude#, $gpslatitude# ]
+#[BODY]            }
+#[BODY]        }
+#[TAIL]    ]
+#[TAIL]}
+ 
