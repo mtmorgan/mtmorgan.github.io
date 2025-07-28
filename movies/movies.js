@@ -190,7 +190,8 @@ const wait_for_db = () => {
     // Wait for the database to be initialized
     return new Promise(resolve => {
         const checkInterval = setInterval(() => {
-            if (db !== undefined) {
+            log('Checking if database is ready...');
+            if (db !== null) {
                 clearInterval(checkInterval);
                 resolve(db);
             }
