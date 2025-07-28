@@ -3,7 +3,8 @@ import WOODS from "./woods.json" with { type: "json" };
 
 const IMG_PREFIX = "./images/",
       SKETCH_WALK_IN_THE_WOODS_ID = "sketch-walk-in-the-woods",
-      SKETCH_WALK_IN_THE_WOODS_AGAIN_ID = "sketch-walk-in-the-woods-again";
+      SKETCH_WALK_IN_THE_WOODS_AGAIN_ID = "sketch-walk-in-the-woods-again",
+      SKETCH_WALK_IN_THE_WOODS_ORNAMENTS_ID = "sketch-walk-in-the-woods-ornaments";
 
 const get_width = (id, max_width) => {
 
@@ -78,7 +79,7 @@ class Woods {
         this.images.
             filter(img => img.scale > this.image_info.end).
             forEach(img => this.unload_image(img));
-        
+
         this.images =
             this.images.filter(img => img.scale <= this.image_info.end);
 
@@ -281,7 +282,7 @@ class Bezier {
         // Assert that times is an object with fields begin, end, step
         this.n_steps = n_steps;
         this.step = 0;
-        
+
     }
 
     // Calculate points along a Bezier curve, with help from
@@ -308,7 +309,7 @@ class Bezier {
         }
 
         return [x, y];
-    }        
+    }
 
     // This is the public entry point -- call next() until 'null'
     next() {
@@ -394,7 +395,7 @@ class WalkAgain extends Woods {
             this.control_point(), this.control_point(),
             this.end_point(img)
         ];
-        
+
         return new Bezier(points, this.n_step);
     }
 
@@ -461,7 +462,6 @@ const sketch_walk_in_the_woods_again = (p5) => {
         p5.frameRate(frame_rate);
         p5.colorMode(p5.HSB);
 
-
         p5.describe("Another Walk in the Woods");
 
     }
@@ -482,5 +482,52 @@ const sketch_walk_in_the_woods_again = (p5) => {
 
 }
 
+class Ornament extends Woods {
+}
+
+const sketch_walk_in_the_woods_ornaments = (p5) => {
+
+    const background_color = p5.color(0, 0, 0), // Black
+          frame_rate = 24,
+          golden_ratio = (1 + Math.sqrt(5)) / 2;
+    let box_width, box_height;
+    let img;
+
+    function oscilate(p5) {
+        const rotation = p5.frameCount / Math.PI / 10;
+        console.log(rotation);
+        p5.rotateY(rotation);
+    }
+
+    p5.preload = () => {
+        img = p5.loadImage('./images/IMG_1190.jpeg');
+    }
+
+    p5.setup = () => {
+
+        const canvas_width = get_width(SKETCH_WALK_IN_THE_WOODS_ORNAMENTS_ID),
+              canvas_height = 1 / golden_ratio * canvas_width;
+        box_height = canvas_height / 3;
+        box_width = box_height / golden_ratio;
+
+        p5.createCanvas(canvas_width, canvas_height, p5.WEBGL);
+        p5.frameRate(frame_rate);
+        p5.colorMode(p5.HSB);
+
+        p5.describe("Another Walk in the Woods");
+
+    }
+
+    p5.draw = () => {
+
+        p5.background(background_color);
+        oscilate(p5);
+        p5.texture(img);
+        p5.box(box_width, box_height, 1);
+        
+    }
+}
+
 new p5(sketch_walk_in_the_woods, SKETCH_WALK_IN_THE_WOODS_ID);
 new p5(sketch_walk_in_the_woods_again, SKETCH_WALK_IN_THE_WOODS_AGAIN_ID);
+new p5(sketch_walk_in_the_woods_ornaments, SKETCH_WALK_IN_THE_WOODS_ORNAMENTS_ID);

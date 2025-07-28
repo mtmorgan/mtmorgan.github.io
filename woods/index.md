@@ -71,7 +71,17 @@ bit, and a strategy might be to introduce a force-directed component
 to keep them more separate.
 
 <div id="sketch-walk-in-the-woods-again"></div>
+
+Ornaments
+
+<div id="sketch-walk-in-the-woods-ornaments"></div>
 <script type="module" src="./walk-in-the-woods.js"></script>
+
+
+# Clustered
+
+<div id="clusters"></div>
+<script type="module" src="./clusters.js"></script>
 
 # Notes
 
