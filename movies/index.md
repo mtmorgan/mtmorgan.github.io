@@ -2,7 +2,7 @@
 title: "Movies"
 layout: page
 date: 2025-07-21
-css: 
+css:
 - https://cdn.datatables.net/1.13.3/css/jquery.dataTables.css
 ---
 
@@ -14,6 +14,7 @@ css:
         <tr>
             <th>#</th>
             <th>Title</th>
+            <th>&#128196;</th>
         </tr>
     </thead>
     <tbody>
@@ -45,6 +46,13 @@ css:
 
 ## What we've watched
 
+Title: *<span id="watched-title"></span>*
+
+Links: *New York Times* <a id="watched-synopsis" target="_blank">synopsis</a>
+and <a id="watched-review" target="_blank">review</a>.
+
+Notes: <span id="watched-notes"></span>
+
 <table id="watched-table" class="display" style="width: 100%">
     <thead>
         <tr>
@@ -65,12 +73,6 @@ css:
         </tr>
     </tfoot>
 </table>
-
-<p id="watched-title"></p>
-
-<p id="watched-synopsis"></p>
-
-<p id="watched-notes"></p>
 
 <script src="https://cdn.datatables.net/1.13.3/js/importmap.js"></script>
 <script type="module" src="movies.js"></script>

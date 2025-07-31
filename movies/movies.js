@@ -30,7 +30,9 @@ const start = (sqlite3) => {
     fetch('/movies/assets/movies.db')
         .then(res => res.arrayBuffer())
         .then(arrayBuffer => {
-            log('Creating database from ArrayBuffer:', arrayBuffer.byteLength, 'bytes');
+            log('Creating database from ArrayBuffer:', arrayBuffer.byteLength,
+                'bytes'
+            );
             create_db(sqlite3, arrayBuffer);
         });
 };
@@ -54,42 +56,38 @@ initializeSQLite();
 // SQL statements
 
 const select_all_movies = () => {
-    const movies = db.selectObjects('SELECT * FROM movie ORDER BY rank');
-    log('Movies:', movies.length);
-    return movies;
+    return db.selectObjects(`
+        SELECT *
+        FROM movie
+        ORDER BY rank`
+    );
 }
 
 const select_queued_movies = () => {
-    const queued = db.selectObjects(`
-        SELECT movie.* 
+    return db.selectObjects(`
+        SELECT movie.*
         FROM notes
-        INNER JOIN movie ON notes.rank = movie.rank 
+        INNER JOIN movie ON notes.rank = movie.rank
         WHERE notes.queued = 1`
     );
-    log('Queued movies:', queued.length);
-    return queued;
 }
 
 const select_watched_movies = () => {
-    const watched = db.selectObjects(`
+    return db.selectObjects(`
         SELECT movie.*, notes.notes AS notes
         FROM notes
-        INNER JOIN movie ON notes.rank = movie.rank 
+        INNER JOIN movie ON notes.rank = movie.rank
         WHERE notes.watched = 1`
     );
-    log('Watched movies:', watched.length);
-    return watched;
 }
 
 const select_title_and_notes = (rank) => {
-    const result = db.selectObject(`
-        SELECT movie.title_text, notes.notes
+    return db.selectObject(`
+        SELECT movie.title_text, movie.share_url, movie.review_url, notes.notes
         FROM movie
         INNER JOIN notes ON movie.rank = notes.rank
         WHERE movie.rank = ?`, [rank]
     );
-    log('Selected title and notes for rank', rank, ':', result);
-    return result;
 }
 
 // DataTables
@@ -98,7 +96,6 @@ const shared_options = {
     scrollY: '200px',
     paging: false,
     scrollCollapse: true,
-    select: true
 };
 
 const init_movies_datatable = () => {
@@ -106,7 +103,8 @@ const init_movies_datatable = () => {
     const table = document.getElementById('movies-table');
     const movie_data = select_all_movies().map((movie) => ({
         rank: movie.rank,
-        title: `<a href="${movie.share_url}" target="_blank">${movie.title_text}</a>`
+        title: `<a href="${movie.share_url}" target="_blank">${movie.title_text}</a>`,
+        review: `<a href="${movie.review_url}" target="_blank">&#128196;</a>`
     }));
 
     // Populate the 'movies' DataTable
@@ -114,18 +112,10 @@ const init_movies_datatable = () => {
         data: movie_data,
         columns: [
             { title: "#", data: "rank" },
-            { title: "Title", data: "title" }
+            { title: "Title", data: "title" },
+            { title: "&#128196;", data: "review", orderable: false }
         ],
         ...shared_options
-    });
-
-    // Add click event listener to rows
-    table.tBodies[0].addEventListener('click', (event) => {
-        const target = event.target.closest('tr');
-        if (target) {
-            const rank = table_dt.row(target).data().rank;
-            update_notes_datatable(rank);
-        }
     });
 };
 
@@ -134,7 +124,7 @@ const init_queue_datatable = () => {
     const table = document.getElementById('queue-table');
     const queue_data = select_queued_movies().map((movie) => ({
         rank: movie.rank,
-        title: `<a href="${movie.share_url}" target="_blank">${movie.title_text}</a>`,
+        title: movie.title_text,
         watch: `<a href="${movie.watch_url}" target="_blank">&#128065;</a>`
     }));
 
@@ -154,7 +144,7 @@ const init_watched_datatable = () => {
     const table = document.getElementById('watched-table');
     const watched_data = select_watched_movies().map((movie) => ({
         rank: movie.rank,
-        title: `<a href="${movie.share_url}" target="_blank">${movie.title_text}</a>`,
+        title: movie.title_text,
         review: `<a href="${movie.review_url}" target="_blank">&#128196;</a>`,
         notes: movie.notes ? "\u2705" : ""
     }));
@@ -167,6 +157,7 @@ const init_watched_datatable = () => {
             { title: "&#128196;", data: "review", orderable: false },
             { title: "&#x2705", data: "notes" }
         ],
+        select: true,
         ...shared_options
     });
 
@@ -175,13 +166,20 @@ const init_watched_datatable = () => {
         const target = event.target.closest('tr');
         if (target) {
             const rank = datatable.row(target).data().rank;
-            const { title_text, notes } = select_title_and_notes(rank);
-            document.getElementById('watched-title').innerHTML = `<strong>${title_text}</strong>`;
-            //            document.getElementById('watched-synopsis').innerHTML = notes || 'No synopsis available.';
-            document.getElementById('watched-notes').innerHTML = 
-                `<strong>Notes:</strong> ` + (notes || "None");
+            const { title_text, share_url, review_url, notes } =
+                select_title_and_notes(rank);
+
+            document.getElementById('watched-title').innerHTML = title_text;
+            document.getElementById('watched-synopsis').href = share_url;
+            document.getElementById('watched-review').href = review_url;;
+            document.getElementById('watched-notes').innerHTML =
+                notes || "None";
         }
     })
+
+    let row = datatable.row(':eq(0)', { page: 'current' });
+    row.select(); // Select the first row
+    row.node().click(); // Trigger click on first row to populate details
 }
 
 // Initialize DataTable on DOMContentLoaded
