@@ -57,7 +57,7 @@ mutation', including its role in patterning neutral molecular
 variation, generating inbreeding depression, and the selection and
 evolution of self-fertilization, migration, and life history.
 
-During my gradate training, I developed understanding of selection on
+During my graduate training, I developed understanding of selection on
 plant reproductive morphologies using quantitative genetic and
 'evolutionary stable strategy' models coupled with statistical tools
 for the inference of paternal reproductive success.
