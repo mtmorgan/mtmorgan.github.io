@@ -46,13 +46,6 @@ css:
 
 ## What we've watched
 
-Title: *<span id="watched-title"></span>*
-
-Links: *New York Times* <a id="watched-synopsis" target="_blank">synopsis</a>
-and <a id="watched-review" target="_blank">review</a>.
-
-Notes: <span id="watched-notes"></span>
-
 <table id="watched-table" class="display" style="width: 100%">
     <thead>
         <tr>
@@ -73,6 +66,24 @@ Notes: <span id="watched-notes"></span>
         </tr>
     </tfoot>
 </table>
+<p></p>
+
+Title: *<span id="watched-title"></span>*
+<br />
+Links: *New York Times* <a id="watched-synopsis" target="_blank">synopsis</a>
+and <a id="watched-review" target="_blank">review</a>.
+
+Notes: <span id="watched-notes"></span>
+
+### Themes
+
+The future: *Mad Max: Fury Road*, *Children of Men*, *Her*, *Wall-E*.
+
+Social commentary: *Parasite*, *The Departed*, *Bridesmaids*.
+
+Relationship: *In The Mood for Love*, *Phantom Thread*, *Anatomy of a Fall*.
+
+Groundhog day: *Mulholland Drive*, *Eternal Sunshine of the Spotless Mind*.
 
 <script src="https://cdn.datatables.net/1.13.3/js/importmap.js"></script>
 <script type="module" src="movies.js"></script>
