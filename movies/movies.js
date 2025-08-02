@@ -157,7 +157,10 @@ const init_watched_datatable = () => {
             { title: "&#128196;", data: "review", orderable: false },
             { title: "&#x2705", data: "notes" }
         ],
-        select: true,
+        select: {
+            style: 'single',
+            info: false
+        },
         ...shared_options
     });
 
