@@ -75,6 +75,13 @@ and <a id="watched-review" target="_blank">review</a>.
 
 Notes: <span id="watched-notes"></span>
 
+### General reflections
+
+Viewing these has helped to develop criteria for evaluating movies. The movies
+at the top of the list combine pillars of compeling themes, excellent acting,
+unique cinematography, and a strong directorial presence. Movies further down
+the list seem generally to compromise one (or more) of these pillars, and then further down still to develop individual components less fully.
+
 ### Themes
 
 The future: *Mad Max: Fury Road*, *Children of Men*, *Her*, *Wall-E*.
