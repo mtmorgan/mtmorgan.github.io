@@ -90,6 +90,9 @@ Social commentary: *Parasite*, *The Departed*, *Bridesmaids*.
 
 Relationship: *In The Mood for Love*, *Phantom Thread*, *Anatomy of a Fall*.
 
+Personal growth: *Amélie*, *Lady Bird*, *Frances Ha*, *Crouching Tiger, Hidden
+Dragon*, *Spirited Away*, *The Royal Tenenbaums*.
+
 Groundhog day: *Mulholland Drive*, *Eternal Sunshine of the Spotless Mind*.
 
 <script src="https://cdn.datatables.net/1.13.3/js/importmap.js"></script>
