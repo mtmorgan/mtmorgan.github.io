@@ -65,18 +65,9 @@ const select_all_movies = () => {
     );
 }
 
-const select_watched_movies = () => {
-    return db.selectObjects(`
-        SELECT movie.*, notes.notes AS notes
-        FROM notes
-        INNER JOIN movie ON notes.rank = movie.rank
-        WHERE notes.watched = 1`
-    );
-}
-
 const select_title_and_notes = (rank) => {
     return db.selectObject(`
-        SELECT movie.title_text, movie.share_url, movie.review_url, notes.notes
+        SELECT movie.title_text, notes.notes
         FROM movie
         INNER JOIN notes ON movie.rank = notes.rank
         WHERE movie.rank = ?`, [rank]
@@ -85,22 +76,13 @@ const select_title_and_notes = (rank) => {
 
 // DataTables
 
-const shared_options = {
-    scrollY: '200px',
-    paging: false,
-    scrollCollapse: true,
-};
-
 const init_movies_datatable = () => {
     log('Updating DataTable with movies data...');
     const table = document.getElementById('movies-table');
     const movie_data = select_all_movies().map((movie) => {
-        console.log(movie);
         let links =
-           `<a href="${movie.share_url}" target="_blank">&#128175;</a>` +
-           '&nbsp;' +
-           `<a href="${movie.review_url}" target="_blank">&#128196;</a>` +
-           '&nbsp';
+           `<a href="${movie.share_url}" target="_blank">&#128175;</a>&nbsp;` +
+           `<a href="${movie.review_url}" target="_blank">&#128196;</a>&nbsp;`;
         if (movie.notes) {
             links += '&#9989;';
         } else if (movie.watched) {
@@ -128,7 +110,9 @@ const init_movies_datatable = () => {
             style: 'single',
             info: false
         },
-        ...shared_options
+        scrollY: '200px',
+        paging: false,
+        scrollCollapse: true
     });
 
     // Add click event listener to rows
@@ -136,14 +120,12 @@ const init_movies_datatable = () => {
         const target = event.target.closest('tr');
         if (target) {
             const rank = datatable.row(target).data().rank;
-            const { title_text, share_url, review_url, notes } =
+            const { title_text, notes } =
                 select_title_and_notes(rank);
 
             document.getElementById('watched-title').innerHTML = title_text;
-            //document.getElementById('watched-synopsis').href = share_url;
-            //document.getElementById('watched-review').href = review_url;;
             document.getElementById('watched-notes').innerHTML =
-                notes || "Notes: none";
+                notes || "No notes yet.";
         }
     })
 
