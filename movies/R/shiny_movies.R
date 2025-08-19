@@ -82,21 +82,21 @@ server <- function(input, output, session) {
           dbGetQuery(con, sql) |>
           mutate(
               links = paste(
-                  format_link(share_url, '&#128175'),
-                  format_link(review_url, '&#128196;'),
+                  format_link(share_url, '&#128175'),         # 100!
+                  format_link(review_url, '&#128196;'),       # page
                   ifelse(
                       !is.na(notes) & nzchar(notes),
-                      '&#9989;',
+                      '&#9989;',                              # green check
                       ifelse(
                           !is.na(watched) & watched,
-                          '&check;',
-                          format_link(watch_url, '&#128065;')
+                          '&check;',                          # check
+                          format_link(watch_url, '&#128065;') # eyeball
                       )
                   )
               ),
               title = title_text
           ) |>
-          select(`&nbsp;` = rank, Title = title, Links = links)
+          select(`#` = rank, Title = title, Links = links)
       DT::datatable(
           movie, 
           rownames = FALSE,
