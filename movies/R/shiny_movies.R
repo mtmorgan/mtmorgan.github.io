@@ -72,16 +72,31 @@ server <- function(input, output, session) {
       format_link <- function(url, text) {
           sprintf("<a href='%s' target='_blank'>%s</a>", url, text)
       }
+      sql <- paste(
+          "SELECT movie.*, notes.watched AS watched, notes.notes AS notes",
+          "FROM movie",
+          "LEFT JOIN notes ON movie.rank = notes.rank",
+          "ORDER BY rank;"
+      )
       movie <-
-          dbGetQuery(con, "SELECT * FROM movie ORDER BY rank") |>
+          dbGetQuery(con, sql) |>
           mutate(
               links = paste(
-                  format_link(watch_url, '&#128065;'),
-                  format_link(review_url, '&#128196;')
+                  format_link(share_url, '&#128175'),         # 100!
+                  format_link(review_url, '&#128196;'),       # page
+                  ifelse(
+                      !is.na(notes) & nzchar(notes),
+                      '&#9989;',                              # green check
+                      ifelse(
+                          !is.na(watched) & watched,
+                          '&check;',                          # check
+                          format_link(watch_url, '&#128065;') # eyeball
+                      )
+                  )
               ),
-              title = format_link(share_url, title_text)
+              title = title_text
           ) |>
-          select(Rank = rank, Title = title, Links = links)
+          select(`#` = rank, Title = title, Links = links)
       DT::datatable(
           movie, 
           rownames = FALSE,
