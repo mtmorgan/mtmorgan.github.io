@@ -97,3 +97,9 @@ interactivity.
 
 Google Gemini helped orient me, especially on how to wait for the database to be
 loaded and to manipulate the DOM.
+
+Director, writer, and actor information is from [TMDB][TMDB] (The
+Movie Database). This information was obtained using the TMDB API but
+is not endorsed or certified by TMDB.
+
+[TMDB]: https://www.themoviedb.org/
