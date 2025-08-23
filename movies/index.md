@@ -17,7 +17,8 @@ Movies we've watched after the list came out have a check mark (&#10003;). If
 we've written our own notes after watchnig the movie, the check mark is green
 (&#9989;).
 
-Clicking on a row brings up our notes below the table.
+Clicking on a row brings up our notes and information from [TMDB][]
+(The Movie Database) below the table.
 
 <!-- prettier-ignore -->
 [100]: https://www.nytimes.com/interactive/2025/movies/best-movies-21st-century.html
@@ -53,7 +54,12 @@ Clicking on a row brings up our notes below the table.
 
 <p></p>
 
-_<span id="watched-title"></span>_ -- <span id="watched-notes"></span>
+_<span id="watched-title"></span>_ (<span id = "release-date"></span>) --
+<span id="overview"></span> Popularity: <span id="popularity"></span>.
+
+Directed by <span id="directors"></span>. Starring <span id="actors"></span>.
+
+Notes: <span id="watched-notes"></span>
 
 ## Reflections on the top 100 list
 

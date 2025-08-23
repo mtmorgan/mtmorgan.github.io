@@ -17,14 +17,14 @@ const create_db = (sqlite3, arrayBuffer) => {
         db.pointer, 'main', p, arrayBuffer.byteLength, arrayBuffer.byteLength,
         sqlite3.capi.SQLITE_DESERIALIZE_FREEONCLOSE
         // Optionally:
-        // | sqlite3.capi.SQLITE_DESERIALIZE_RESIZEABLE
+            | sqlite3.capi.SQLITE_DESERIALIZE_RESIZEABLE
     );
     db.checkRc(rc);
     log('Database created successfully:', typeof db);
 }
 
 const start = (sqlite3) => {
-    log('Running SQLite3 version', sqlite3.version.libVersion);
+    log('Starting SQLite3 version', sqlite3.version.libVersion);
 
     // Fetch the database file as arrayBuffer
     fetch('/movies/assets/movies.db')
@@ -44,7 +44,6 @@ const initializeSQLite = async () => {
             print: log,
             printErr: error,
         });
-        log('Done initializing. Running demo...');
         start(sqlite3);
     } catch (err) {
         error('Initialization error:', err.name, err.message);
@@ -69,8 +68,36 @@ const select_title_and_notes = (rank) => {
     return db.selectObject(`
         SELECT movie.title_text, notes.notes
         FROM movie
-        INNER JOIN notes ON movie.rank = notes.rank
-        WHERE movie.rank = ?`, [rank]
+        LEFT JOIN notes ON movie.rank = notes.rank
+        WHERE movie.rank = ?;`, [rank]
+    );
+}
+
+const select_tmdb_info = (rank) => {
+    return db.selectObject(`
+        SELECT
+            strftime('%Y', release_date) AS release_date,
+            overview AS overview,
+            popularity AS popularity
+        FROM tmdb_movie
+        WHERE rank = ?`, [rank]
+    );
+}
+
+const select_tmdb_actors = (rank) => {
+    return db.selectObjects(`
+        SELECT name, character
+        FROM tmdb_cast
+        WHERE rank = ? AND "order" < 4
+        ORDER BY "order"`, [rank]
+    );
+}
+
+const select_tmdb_directors = (rank) => {
+    return db.selectObjects(`
+        SELECT name
+        FROM tmdb_crew
+        WHERE rank = ? AND job = 'Director'`, [rank]
     );
 }
 
@@ -120,12 +147,25 @@ const init_movies_datatable = () => {
         const target = event.target.closest('tr');
         if (target) {
             const rank = datatable.row(target).data().rank;
-            const { title_text, notes } =
-                select_title_and_notes(rank);
+            const { title_text, notes } = select_title_and_notes(rank);
+            const { release_date, overview, popularity } =
+                select_tmdb_info(rank);
+            const actors = select_tmdb_actors(rank)
+                .map(actor => `${actor.name} (${actor.character})`)
+                .join(', ');
+            const directors = select_tmdb_directors(rank)
+                .map(director => director.name)
+                .join(', ');
 
             document.getElementById('watched-title').innerHTML = title_text;
             document.getElementById('watched-notes').innerHTML =
                 notes || "No notes yet.";
+
+            document.getElementById('release-date').innerHTML = release_date;
+            document.getElementById('overview').innerHTML = overview;
+            document.getElementById('popularity').innerHTML = popularity;
+            document.getElementById('actors').innerHTML = actors;
+            document.getElementById('directors').innerHTML = directors;
         }
     })
 
