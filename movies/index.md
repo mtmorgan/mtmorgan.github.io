@@ -55,7 +55,7 @@ Clicking on a row brings up our notes and information from [TMDB][]
 
 <p></p>
 
-_<span id="title"></span>_ (<span id = "release-date"></span>) --
+_<span id="title"></span>_ (<span id = "release_date"></span>) --
 <span id="overview"></span>
 Popularity: <span id="popularity"></span>.
 

@@ -17,7 +17,7 @@ const create_db = (sqlite3, arrayBuffer) => {
         db.pointer, 'main', p, arrayBuffer.byteLength, arrayBuffer.byteLength,
         sqlite3.capi.SQLITE_DESERIALIZE_FREEONCLOSE
         // Optionally:
-            | sqlite3.capi.SQLITE_DESERIALIZE_RESIZEABLE
+        //    | sqlite3.capi.SQLITE_DESERIALIZE_RESIZEABLE
     );
     db.checkRc(rc);
     log('Database created successfully:', typeof db);
@@ -52,35 +52,35 @@ const initializeSQLite = async () => {
 
 initializeSQLite();
 
-// SQL statements
+// SQL queries
 
 const select_all_movies = () => {
     return db.selectObjects(`
-        SELECT movie.*, notes.watched AS watched, notes.notes AS notes
+        SELECT
+            movie.*,
+            notes.watched AS watched,
+            notes.notes AS notes
         FROM movie
         LEFT JOIN notes
-        ON movie.rank = notes.rank
+            ON movie.rank = notes.rank
         ORDER BY movie.rank`
     );
 }
 
-const select_title_and_notes = (rank) => {
-    return db.selectObject(`
-        SELECT movie.title_text, notes.notes
-        FROM movie
-        LEFT JOIN notes ON movie.rank = notes.rank
-        WHERE movie.rank = ?;`, [rank]
-    );
-}
-
-const select_tmdb_info = (rank) => {
+const select_movie_info = (rank) => {
     return db.selectObject(`
         SELECT
-            strftime('%Y', release_date) AS release_date,
-            overview AS overview,
-            popularity AS popularity
-        FROM tmdb_movie
-        WHERE rank = ?`, [rank]
+            movie.title_text AS title,
+            notes.notes AS notes,
+            strftime('%Y', tmdb_movie.release_date) AS release_date,
+            tmdb_movie.overview AS overview,
+            tmdb_movie.popularity AS popularity
+        FROM movie
+        LEFT JOIN notes
+            ON movie.rank = notes.rank
+        LEFT JOIN tmdb_movie
+            ON movie.rank = tmdb_movie.rank
+        WHERE movie.rank = ?;`, [rank]
     );
 }
 
@@ -142,17 +142,44 @@ const select_movie_rank = (role, name) => {
     );
 }
 
-// DataTables
+// DOM
 
-const datatable_click_event = (datatable, event) => {
+const dom_create_actor = (actor) => {
+    const name = document.createElement('span');
+    name.className = 'actor';
+    name.textContent = actor.name ;
+    if (actor.movie_count > 1) {
+        name.classList.add('multiple-movies');
+    }
+
+    const span = document.createElement('span');
+    span.appendChild(name);
+    span.appendChild(document.createTextNode(` (${actor.character})`));
+    return span.innerHTML;
+};
+
+const dom_create_crew = (job, person) => {
+    const name = document.createElement('span');
+    name.className = job;
+    name.textContent = person.name ;
+    if (person.movie_count > 1) {
+        name.classList.add('multiple-movies');
+    }
+    return name.outerHTML;
+}
+
+const dom_datatable_click_event = (event, datatable) => {
     const target = event.target.closest("tr");
     if (!target) {
         return; // Click was outside a row
     }
-
     const rank = datatable.row(target).data().rank;
-    const { title_text, notes } = select_title_and_notes(rank);
-    const { release_date, overview, popularity } = select_tmdb_info(rank);
+
+    const info = select_movie_info(rank);
+    for (const key in info) {
+        document.getElementById(key).innerHTML = info[key] || "None yet.";
+    }
+
     const actors = select_tmdb_actors(rank)
         .map((actor) => dom_create_actor(actor))
         .join(", ");
@@ -162,47 +189,68 @@ const datatable_click_event = (datatable, event) => {
     const screenwriters = select_tmdb_crew('screenwriter', rank)
         .map((person) => dom_create_crew('screenwriter', person))
         .join(", ");
-
-    document.getElementById("title").innerHTML = title_text;
-    document.getElementById("release-date").innerHTML = release_date;
-    document.getElementById("overview").innerHTML = overview;
-
+    document.getElementById("actors").innerHTML = actors;
     document.getElementById("directors").innerHTML = directors;
     document.getElementById("screenwriters").innerHTML = screenwriters
-    document.getElementById("actors").innerHTML = actors;
-    document.getElementById("popularity").innerHTML = popularity;
-
-    document.getElementById("notes").innerHTML = notes || "No notes yet.";
 
     // Add event listener to multiple-movies actors/directors
     document.querySelectorAll(".multiple-movies").forEach((elem) => {
-        elem.addEventListener("click", (e) => {
-            e.stopPropagation(); // Prevent triggering row click event
-
-            const wasActive = e.target.classList.contains('active');
-            // Clear all active classes
-            document.querySelectorAll('.active').forEach((el) => {
-                el.classList.remove('active');
-            });
-
-            let regex = '';
-            if (!wasActive) {
-                // Set active class on clicked element
-                e.target.classList.toggle('active');
-                // Update regex to match any of the ids of the active element
-                const ranks = select_movie_rank(
-                    e.target.classList[0],
-                    e.target.textContent
-                );
-                regex = '^(' + ranks.join('|') + ')$';
-            }
-            // update datatable rows with selected ranks, or clear selection
-            datatable.column(0).search(regex, true).draw();
-        });
+        elem.addEventListener(
+            "click",
+            (e) => dom_multiple_movies_click_event(e, datatable)
+        );
     });
 }
 
-const datatable_init_movies = () => {
+const dom_multiple_movies_click_event = (event, datatable) => {
+    event.stopPropagation(); // Prevent triggering row click event
+
+    const wasActive = event.target.classList.contains('active');
+    // Clear all active classes
+    document.querySelectorAll('.active').forEach((el) => {
+        el.classList.remove('active');
+    });
+
+    let regex = '';
+    if (!wasActive) {
+        // Set active class on clicked element
+        event.target.classList.toggle('active');
+        // Update regex to match any of the ids of the active element
+        const ranks = select_movie_rank(
+            event.target.classList[0],
+            event.target.textContent
+        );
+        regex = '^(' + ranks.join('|') + ')$';
+    }
+    // update datatable rows with selected ranks, or clear selection
+    datatable.column(0).search(regex, true).draw();
+}
+
+// Initialize DataTable on DOMContentLoaded
+
+const wait_for_db = () => {
+    // Wait for the database to be initialized
+    return new Promise(resolve => {
+        const checkInterval = setInterval(() => {
+            log('Checking if database is ready...');
+            if (db !== null) {
+                clearInterval(checkInterval);
+                resolve(db);
+            }
+        }, 100);
+    });
+}
+
+const init_datatable = () => {
+    wait_for_db().then(() => {
+        log('Database is ready, updating DataTables...');
+        init_datatable_movies ();
+    }).catch(err => {
+        error('Error initializing database / datatable:', err);
+    });
+};
+
+const init_datatable_movies = () => {
     log('Updating DataTable with movies data...');
     const table = document.getElementById('movies-table');
     const movie_data = select_all_movies().map((movie) => {
@@ -242,65 +290,14 @@ const datatable_init_movies = () => {
     });
 
     // Add click event listener to rows
-    table.tBodies[0]
-        .addEventListener('click', (event) => {
-            // Add datatable instance to event handler
-            datatable_click_event(datatable, event)
-        });
+    table.tBodies[0].addEventListener(
+        'click',
+        (event) => dom_datatable_click_event(event, datatable)
+    );
 
-    let row = datatable.row(':eq(0)', { page: 'current' });
+    const row = datatable.row(':eq(0)', { page: 'current' });
     row.select(); // Select the first row
     row.node().click(); // Trigger click on first row to populate details
-};
-
-// DOM
-
-const dom_create_actor = (actor) => {
-    const name = document.createElement('span');
-    name.className = 'actor';
-    name.textContent = actor.name ;
-    if (actor.movie_count > 1) {
-        name.classList.add('multiple-movies');
-    }
-
-    const span = document.createElement('span');
-    span.appendChild(name);
-    span.appendChild(document.createTextNode(` (${actor.character})`));
-    return span.innerHTML;
-};
-
-const dom_create_crew = (job, person) => {
-    const name = document.createElement('span');
-    name.className = job;
-    name.textContent = person.name ;
-    if (person.movie_count > 1) {
-        name.classList.add('multiple-movies');
-    }
-    return name.outerHTML;
-}
-
-// Initialize DataTable on DOMContentLoaded
-
-const wait_for_db = () => {
-    // Wait for the database to be initialized
-    return new Promise(resolve => {
-        const checkInterval = setInterval(() => {
-            log('Checking if database is ready...');
-            if (db !== null) {
-                clearInterval(checkInterval);
-                resolve(db);
-            }
-        }, 100);
-    });
-}
-
-const init_datatable = () => {
-    wait_for_db().then(() => {
-        log('Database is ready, updating DataTables...');
-        datatable_init_movies ();
-    }).catch(err => {
-        error('Error initializing database / datatable:', err);
-    });
 };
 
 document.addEventListener("DOMContentLoaded", init_datatable);
