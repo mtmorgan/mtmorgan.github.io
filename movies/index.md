@@ -4,6 +4,7 @@ layout: page
 date: 2025-07-21
 css:
   - https://cdn.datatables.net/1.13.3/css/jquery.dataTables.css
+  - /movies/assets/movies.css
 ---
 
 The New York Times offered [The 100 Best Movies of the 21st Century][100] as
@@ -17,7 +18,8 @@ Movies we've watched after the list came out have a check mark (&#10003;). If
 we've written our own notes after watchnig the movie, the check mark is green
 (&#9989;).
 
-Clicking on a row brings up our notes below the table.
+Clicking on a row brings up our notes and information from [TMDB][]
+(The Movie Database) below the table.
 
 <!-- prettier-ignore -->
 [100]: https://www.nytimes.com/interactive/2025/movies/best-movies-21st-century.html
@@ -53,7 +55,16 @@ Clicking on a row brings up our notes below the table.
 
 <p></p>
 
-_<span id="watched-title"></span>_ -- <span id="watched-notes"></span>
+_<span id="title"></span>_ (<span id = "release_date"></span>) --
+<span id="overview"></span>
+Popularity: <span id="popularity"></span>.
+
+Directed by <span id="directors"></span>.
+Screenplay / writing by <span id="screenwriters"></span>.
+
+Starring <span id="actors"></span>.
+
+Notes: <span id="notes"></span>
 
 ## Reflections on the top 100 list
 
@@ -97,3 +108,9 @@ interactivity.
 
 Google Gemini helped orient me, especially on how to wait for the database to be
 loaded and to manipulate the DOM.
+
+Director, writer, and actor information is from [TMDB][TMDB] (The
+Movie Database). This information was obtained using the TMDB API but
+is not endorsed or certified by TMDB.
+
+[TMDB]: https://www.themoviedb.org/

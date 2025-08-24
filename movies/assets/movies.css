@@ -1,0 +1,15 @@
+.multiple-movies {
+    color: #2a7ae2;
+    text-decoration: none;
+}
+
+.multiple-movies:hover {
+    text-decoration: underline;
+}
+
+.active {
+    background-color: rgba(var(--dt-row-selected, 0.923));
+    color: white;
+    border-radius: 2px;
+    padding: 0px 2px;
+}
