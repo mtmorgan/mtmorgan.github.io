@@ -88,48 +88,56 @@ const select_tmdb_actors = (rank) => {
     return db.selectObjects(`
         SELECT
             -- All actors for this movie, with their movie counts
-            actors.name AS "name",
-            actors.character AS character,
+            actor.name AS "name",
+            actor.character AS character,
             (
                 -- Count number of movies with this actor in top 6 billed roles
                 SELECT COUNT(*)
-                FROM tmdb_cast AS actors_alias
+                FROM tmdb_cast AS alias
                 WHERE
-                    (actors_alias.name = actors.name)
-                    AND (actors_alias."order" < 6)
+                    (alias.name = actor.name)
+                    AND (alias."order" < 6)
             ) AS movie_count
-        FROM tmdb_cast AS actors
-        WHERE (actors.rank = ?) AND (actors."order" < 6);`,
+        FROM tmdb_cast AS actor
+        WHERE (actor.rank = ?) AND (actor."order" < 6);`,
         [rank]
     );
 }
 
-const select_tmdb_directors = (rank) => {
+const select_tmdb_crew = (role, rank) => {
+    const job = {
+        director: "('Director')",
+        screenwriter: "('Screenplay', 'Writer')"
+    }[role];
+
     return db.selectObjects(`
         SELECT
-            -- All directors for this movie, with their movie counts
+            -- All people for this movie, with their movie counts
             crew.name AS name,
             (
-                -- Count number of movies directed by this director
+                -- Count number of movies of each person
                 SELECT COUNT(*)
-                FROM tmdb_crew AS crew_alias
-                WHERE (crew_alias.name = crew.name)
-                    AND (crew_alias.job = 'Director')
+                FROM tmdb_crew AS alias
+                WHERE (alias.name = crew.name) AND (alias.job IN ${job})
             ) AS movie_count
         FROM tmdb_crew AS crew
-        WHERE (crew.rank = ?) AND (job = 'Director');`,
+        WHERE (crew.rank = ?) AND (crew.job IN ${job});`,
         [rank]
     );
 };
 
-const select_movie_rank = (class_name, name) => {
-    const table = (class_name === 'actor') ? 'tmdb_cast' : 'tmdb_crew';
-    const and = (class_name === 'actor') ?
-        "AND (\"order\" < 6)" : "AND (job = 'Director')";
+const select_movie_rank = (role, name) => {
+    const table = (role === 'actor') ? 'tmdb_cast' : 'tmdb_crew';
+    const and = {
+        'actor': '("order" < 6)',
+        'director': "(job IN ('Director'))",
+        'screenwriter': "(job IN ('Screenplay', 'Writer'))"
+    }[role];
+
     return db.selectValues(`
         SELECT DISTINCT(rank)
         FROM ${table}
-        WHERE name = ? ${and};`,
+        WHERE (name = ?) AND ${and};`,
         [name]
     );
 }
@@ -148,18 +156,23 @@ const datatable_click_event = (datatable, event) => {
     const actors = select_tmdb_actors(rank)
         .map((actor) => dom_create_actor(actor))
         .join(", ");
-    const directors = select_tmdb_directors(rank)
-        .map((director) => dom_create_director(director))
+    const directors = select_tmdb_crew('director', rank)
+        .map((person) => dom_create_crew('director', person))
+        .join(", ");
+    const screenwriters = select_tmdb_crew('screenwriter', rank)
+        .map((person) => dom_create_crew('screenwriter', person))
         .join(", ");
 
-    document.getElementById("watched-title").innerHTML = title_text;
-    document.getElementById("watched-notes").innerHTML = notes || "No notes yet.";
-
+    document.getElementById("title").innerHTML = title_text;
     document.getElementById("release-date").innerHTML = release_date;
     document.getElementById("overview").innerHTML = overview;
-    document.getElementById("popularity").innerHTML = popularity;
-    document.getElementById("actors").innerHTML = actors;
+
     document.getElementById("directors").innerHTML = directors;
+    document.getElementById("screenwriters").innerHTML = screenwriters
+    document.getElementById("actors").innerHTML = actors;
+    document.getElementById("popularity").innerHTML = popularity;
+
+    document.getElementById("notes").innerHTML = notes || "No notes yet.";
 
     // Add event listener to multiple-movies actors/directors
     document.querySelectorAll(".multiple-movies").forEach((elem) => {
@@ -256,12 +269,11 @@ const dom_create_actor = (actor) => {
     return span.innerHTML;
 };
 
-const dom_create_director = (director) => {
+const dom_create_crew = (job, person) => {
     const name = document.createElement('span');
-    name.className = 'director';
-    name.textContent = director.name ;
-    log(director);
-    if (director.movie_count > 1) {
+    name.className = job;
+    name.textContent = person.name ;
+    if (person.movie_count > 1) {
         name.classList.add('multiple-movies');
     }
     return name.outerHTML;

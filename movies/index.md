@@ -55,12 +55,16 @@ Clicking on a row brings up our notes and information from [TMDB][]
 
 <p></p>
 
-_<span id="watched-title"></span>_ (<span id = "release-date"></span>) --
-<span id="overview"></span> Popularity: <span id="popularity"></span>.
+_<span id="title"></span>_ (<span id = "release-date"></span>) --
+<span id="overview"></span>
+Popularity: <span id="popularity"></span>.
 
-Directed by <span id="directors"></span>. Starring <span id="actors"></span>.
+Directed by <span id="directors"></span>.
+Screenplay / writing by <span id="screenwriters"></span>.
 
-Notes: <span id="watched-notes"></span>
+Starring <span id="actors"></span>.
+
+Notes: <span id="notes"></span>
 
 ## Reflections on the top 100 list
 
