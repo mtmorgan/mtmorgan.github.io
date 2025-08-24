@@ -10,19 +10,18 @@ css:
 The New York Times offered [The 100 Best Movies of the 21st Century][100] as
 chosen by 'creators' (producers, directors, actors, etc.).
 
-The movies are listed below, with links to the synposis in the list (&#128175;)
+The movies are listed below, with links to the synopsis in the list (&#128175;)
 and the New York Times review of the original movie (&#128196;). If we haven't
 seen the movie, there is a link to where to watch (&#128065;).
 
 Movies we've watched after the list came out have a check mark (&#10003;). If
-we've written our own notes after watchnig the movie, the check mark is green
+we've written our own notes after watching the movie, the check mark is green
 (&#9989;).
 
-Clicking on a row brings up our notes and information from [TMDB][]
-(The Movie Database) below the table.
-
-<!-- prettier-ignore -->
-[100]: https://www.nytimes.com/interactive/2025/movies/best-movies-21st-century.html
+Clicking on a row brings up our notes and information from [TMDB][] (The Movie
+Database) below the table. Directors, writers, or actors appearing as links have
+more than one movie in the top 100. Clicking on the link selects the other
+movies the person participates in; clicking again reverts to the full list.
 
 <table id="movies-table" class="display" style="width: 100%">
     <caption>New York Times Best Movies of the 21st Century</caption>
@@ -56,11 +55,10 @@ Clicking on a row brings up our notes and information from [TMDB][]
 <p></p>
 
 _<span id="title"></span>_ (<span id = "release_date"></span>) --
-<span id="overview"></span>
-Popularity: <span id="popularity"></span>.
+<span id="overview"></span> Popularity: <span id="popularity"></span>.
 
-Directed by <span id="directors"></span>.
-Screenplay / writing by <span id="screenwriters"></span>.
+Directed by <span id="directors"></span>. Screenplay / writing by
+<span id="screenwriters"></span>.
 
 Starring <span id="actors"></span>.
 
@@ -69,7 +67,7 @@ Notes: <span id="notes"></span>
 ## Reflections on the top 100 list
 
 Viewing these has helped to develop criteria for evaluating movies. The movies
-at the top of the list combine pillars of compeling themes, excellent acting,
+at the top of the list combine pillars of compelling themes, excellent acting,
 unique cinematography, and a strong directorial presence. Movies further down
 the list seem generally to compromise one (or more) of these pillars, and then
 further down still to develop individual components less fully.
@@ -93,24 +91,34 @@ Groundhog day: _Mulholland Drive_, _Eternal Sunshine of the Spotless Mind_.
 
 ## Implementation notes
 
-The main innovation here is use of the SQLite WASM to provide a database served
-from static GitHub pages. This is not a particularly practical use case, but
-still a good learning experience. A challenge was to wait for the database to be
-loaded; the solution uses a JavaScript `Promise` and `setInterval()`. The
-database is for practical purposes read-only (because the server is static, and
-the browser doesn't provide long-term persistence). So the database is updated
-outside of the main app using an _R_ / _shiny_ script on my laptop, then pushed
-to GitHub.
+I used the [SQLite WASM][] to provide a database served from static GitHub
+pages. This is not a particularly practical use case (because the database is
+read-only), but still a good learning experience. It is also pretty neat, on
+reflection, to have the client providing significant computing. A challenge was
+to wait for the database to be loaded; the solution uses a JavaScript `Promise`
+and `setInterval()`. The database is updated outside of the main app using an
+_R_ / _Shiny_ script on my laptop, then pushing the database to GitHub.
 
 The implementation also involved learning more about directly working with
-Datatables and the HTML Document Object Model (DOM), including introducing
-interactivity.
+[DataTables][] and the HTML Document Object Model (DOM), including introducing
+interactivity via events. The Javascript is now about 300 lines long, so some
+attention is paid to modular code organization.
 
-Google Gemini helped orient me, especially on how to wait for the database to be
-loaded and to manipulate the DOM.
+Google Gemini helped orient me, especially on how to wait for the database to
+load, and how to manipulate the DOM.
 
-Director, writer, and actor information is from [TMDB][TMDB] (The
-Movie Database). This information was obtained using the TMDB API but
-is not endorsed or certified by TMDB.
+The top 100 list and links to reviews and 'where to watch' are from the [New
+York Times][100]. The data were scraped from the web page using _R_ and the
+[xml2][] and [dplyr][] packages.
 
+Director, writer, and actor information is from [TMDB][] (The Movie Database).
+This information was obtained using the TMDB API but is not endorsed or
+certified by TMDB.
+
+<!-- prettier-ignore -->
+[100]: https://www.nytimes.com/interactive/2025/movies/best-movies-21st-century.html
+[SQLite WASM]: https://sqlite.org/wasm/doc/trunk/index.md
+[DataTables]: https://datatables.net/
+[xml2]: https://xml2.r-lib.org/
+[dplyr]: https://dplyr.tidyverse.org/
 [TMDB]: https://www.themoviedb.org/
