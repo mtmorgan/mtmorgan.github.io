@@ -4,6 +4,7 @@ layout: page
 date: 2025-07-21
 css:
   - https://cdn.datatables.net/1.13.3/css/jquery.dataTables.css
+  - /movies/assets/movies.css
 ---
 
 The New York Times offered [The 100 Best Movies of the 21st Century][100] as
