@@ -86,6 +86,8 @@ Dragon_, _Spirited Away_, _The Royal Tenenbaums_, _Superbad_.
 
 Groundhog day: _Mulholland Drive_, _Eternal Sunshine of the Spotless Mind_.
 
+Animation: _Spirited Away_, _Wall-E_, _Up_, _Amélie_.
+
 <script src="https://cdn.datatables.net/1.13.3/js/importmap.js"></script>
 <script type="module" src="movies.js"></script>
 
