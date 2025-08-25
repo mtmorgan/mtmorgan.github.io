@@ -50,6 +50,30 @@ get <-
     httr::content(response, as = "text")
 }
 
+## wrap dbWriteTable
+
+dbwrite <-
+    function(con, name, value, rank)
+{
+    dbWriteTable(con, name, bind_cols(rank = rank, value), append = TRUE)
+}
+
+## denormalize genre ids
+
+genre <- local({
+    genre_lookup_tbl <-
+        get("/genre/movie/list") |>
+        j_pivot("genres", as = "tibble")
+
+    function(movie) {
+        id <- j_query(movie, "genre_ids", as = "R")
+        if (!length(id)) # may be zero-length
+            id <- integer()
+        left_join(tibble(id), genre_lookup_tbl, by = "id") |>
+            select(name)
+    }
+})
+
 ## create tables for a single movie
 
 tmdb_info <-
@@ -57,19 +81,26 @@ tmdb_info <-
 {
     if (rank %% 10 == 0) message("rank: ", rank)
     tryCatch({
-        movie <- get("/search/movie", query = list(query=title))
+        movie <-
+            get("/search/movie", query = list(query=title)) |>
+            j_query(paste0(
+                "results[?title=='", title, "']", # exact title
+                "| max_by([*], &popularity)"      # most popular
+            ))
 
-        movie_tbl <-
-            j_query(movie, paste0("results[?title=='", title, "']")) |>
-            j_pivot(
-                "max_by([*], &popularity).{
-                     tmdb_id: id, release_date: release_date,
-                     overview: overview, popularity: popularity,
-                     vote_average: vote_average, vote_count: vote_count
-                 }",
-                as = "tibble"
-            )
+        movie_tbl <- j_pivot(
+            movie,
+            "{
+                tmdb_id: id, release_date: release_date,
+                overview: overview, popularity: popularity,
+                vote_average: vote_average, vote_count: vote_count
+            }",
+            as = "tibble"
+        )
         stopifnot(NROW(movie_tbl) == 1L)
+
+        genre_tbl <- genre(movie)
+        stopifnot(NCOL(genre_tbl) == 1L)
 
         credits <- get(paste0("/movie/", movie_tbl$tmdb_id, "/credits"))
 
@@ -99,21 +130,10 @@ tmdb_info <-
     })
 
     tryCatch({
-        dbWriteTable(
-            con,
-            "tmdb_movie", bind_cols(rank = rank, movie_tbl),
-            append = TRUE
-        )
-        dbWriteTable(
-            con,
-            "tmdb_crew", bind_cols(rank = rank, crew_tbl),
-            append = TRUE
-        )
-        dbWriteTable(
-            con,
-            "tmdb_cast", bind_cols(rank = rank, cast_tbl),
-            append = TRUE
-        )
+        dbwrite(con, "tmdb_movie", movie_tbl, rank)
+        dbwrite(con, "tmdb_genre", genre_tbl, rank)
+        dbwrite(con, "tmdb_crew", crew_tbl, rank)
+        dbwrite(con, "tmdb_cast", cast_tbl, rank)
     }, error = function(err) {
         message(rank, " '", title, "' sqlite failed: ", conditionMessage(err))
         FALSE
@@ -122,7 +142,7 @@ tmdb_info <-
 
 ## (re)create tables?
 
-tbls <- c("tmdb_cast", "tmdb_crew", "tmdb_movie")
+tbls <- c("tmdb_cast", "tmdb_crew", "tmdb_movie", "tmdb_genre")
 if (length(setdiff(tbls, dbListTables(con)))) {
     ## remove existing tables
     for (tbl in intersect(tbls, dbListTables(con)))
@@ -134,74 +154,3 @@ if (length(setdiff(tbls, dbListTables(con)))) {
         MoreArgs = list(con = con)
     )
 }
-
-##
-## data exploration
-##
-
-## prolific directors...
-tbl(con, "tmdb_crew") |>
-    filter(job == "Director") |>
-    count(name, sort = TRUE)
-## ... and what they did
-who <- "Christopher Nolan"
-## who <- "Paul Thomas Anderson"
-tbl(con, "tmdb_crew") |>
-    filter(job == "Director", name == who) |>
-    left_join(tbl(con, "movie")) |>
-    select(rank, title_text) |>
-    arrange(rank)
-
-## prolific actors
-tbl(con, "tmdb_cast") |>
-    count(name, sort = TRUE) |>
-    filter(n > 3) |>
-    print(n = Inf)
-
-tbl(con, "tmdb_cast") |>
-    group_by(name) |>
-    summarize(
-        n = n(),
-        mean_order = mean(order),
-        median_order = median(order)
-    ) |>
-    filter(n > 2) |>
-    arrange(median_order, desc(n)) |>
-    print(n = 20)
-
-## ...and what they did
-## who <- "Brad Pitt"
-who <- "Joseph Oliveira"
-## who <- "Philip Seymour Hoffman"
-## who <- "George Clooney"
-## who <- "Sandra Hüller"
-## who <- "Scarlett Johansson"
-tbl(con, "tmdb_cast") |>
-    filter(name == who) |>
-    left_join(tbl(con, "movie")) |>
-    select(rank, title_text, character, order) |>
-    arrange(rank)
-
-who <- "Caleb Landry Jones"
-who <- "Joseph Oliveira"
-tbl(con, "tmdb_cast") |>
-    filter(name == who) |>
-    arrange(rank)
-
-## recency bias?
-tbl(con, "tmdb_movie") |>
-    mutate(release_date = as.Date(release_date)) |>
-    collect() |>
-    mutate(
-        year = cut(
-            release_date,
-            breaks = 2000 + (0:6) * 5,
-            right=FALSE
-        )
-    ) |>
-    group_by(year) |>
-    summarize(
-        n = n(),
-        mean_rank = mean(rank), median_rank = median(rank),
-        min_rank = min(rank), max_rank = max(rank)
-    )

@@ -84,6 +84,21 @@ const select_movie_info = (rank) => {
     );
 }
 
+const select_tmdb_genre = (rank) => {
+    return db.selectObjects(`
+        SELECT
+            genre.name AS name,
+            (
+                SELECT COUNT(*)
+                FROM tmdb_genre AS alias
+                WHERE alias.name = genre.name
+            ) AS count
+        FROM tmdb_genre AS genre
+        WHERE genre.rank = ?;`,
+        [rank]
+    );
+}
+
 const select_tmdb_actors = (rank) => {
     return db.selectObjects(`
         SELECT
@@ -127,8 +142,14 @@ const select_tmdb_crew = (role, rank) => {
 };
 
 const select_movie_rank = (role, name) => {
-    const table = (role === 'actor') ? 'tmdb_cast' : 'tmdb_crew';
+    const table = {
+        'genre': 'tmdb_genre',
+        'actor': 'tmdb_cast',
+        'director': 'tmdb_crew',
+        'screenwriter': 'tmdb_crew'
+    }[role];
     const and = {
+        'genre': '1=1',
         'actor': '("order" < 6)',
         'director': "(job IN ('Director'))",
         'screenwriter': "(job IN ('Screenplay', 'Writer'))"
@@ -143,6 +164,16 @@ const select_movie_rank = (role, name) => {
 }
 
 // DOM
+
+const dom_create_genre = (genre) => {
+    const name = document.createElement('span');
+    name.className = 'genre';
+    name.textContent = genre.name ;
+    if (genre.count > 1) {
+        name.classList.add('multiple-movies');
+    }
+    return name.outerHTML;
+};
 
 const dom_create_actor = (actor) => {
     const name = document.createElement('span');
@@ -180,6 +211,9 @@ const dom_datatable_click_event = (event, datatable) => {
         document.getElementById(key).innerHTML = info[key] || "None yet.";
     }
 
+    const genre = select_tmdb_genre(rank)
+        .map((genre) => dom_create_genre(genre))
+        .join(", ");
     const actors = select_tmdb_actors(rank)
         .map((actor) => dom_create_actor(actor))
         .join(", ");
@@ -189,6 +223,7 @@ const dom_datatable_click_event = (event, datatable) => {
     const screenwriters = select_tmdb_crew('screenwriter', rank)
         .map((person) => dom_create_crew('screenwriter', person))
         .join(", ");
+    document.getElementById("genre").innerHTML = genre || "Unknown";
     document.getElementById("actors").innerHTML = actors;
     document.getElementById("directors").innerHTML = directors;
     document.getElementById("screenwriters").innerHTML = screenwriters
