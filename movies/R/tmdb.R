@@ -21,6 +21,7 @@ movie <-
         ## title mismatches between NY Times ~ TMDb
         title_text = case_match(
             title_text,
+            "Adaptation" ~ "Adaptation.",
             "Once Upon a Time ... in Hollywood" ~
                 "Once Upon a Time... in Hollywood",
             "Tár" ~ toupper("Tár"),
@@ -64,7 +65,6 @@ genre <- local({
     genre_lookup_tbl <-
         get("/genre/movie/list") |>
         j_pivot("genres", as = "tibble")
-
     function(movie) {
         id <- j_query(movie, "genre_ids", as = "R")
         if (!length(id)) # may be zero-length
@@ -81,13 +81,19 @@ tmdb_info <-
 {
     if (rank %% 10 == 0) message("rank: ", rank)
     tryCatch({
-        movie <-
-            get("/search/movie", query = list(query=title)) |>
-            j_query(paste0(
-                "results[?title=='", title, "']", # exact title
-                "| max_by([*], &popularity)"      # most popular
-            ))
-
+        if (title == "Fish Tank") {
+            ## special case -- not the most popular movie titled 'Fish Tank'
+            movie <-
+                get("/search/movie", query = list(query=title)) |>
+                j_query("results[?id==`24469`] | [0]")
+        } else {
+            movie <-
+                get("/search/movie", query = list(query=title)) |>
+                j_query(paste0(
+                    "results[?title=='", title, "']", # exact title
+                    "| max_by([*], &popularity)"      # most popular
+                ))
+        }
         movie_tbl <- j_pivot(
             movie,
             "{

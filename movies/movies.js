@@ -74,7 +74,7 @@ const select_movie_info = (rank) => {
             notes.notes AS notes,
             strftime('%Y', tmdb_movie.release_date) AS release_date,
             tmdb_movie.overview AS overview,
-            tmdb_movie.popularity AS popularity
+            printf('%.3g', tmdb_movie.popularity) AS popularity
         FROM movie
         LEFT JOIN notes
             ON movie.rank = notes.rank

@@ -115,9 +115,9 @@ The top 100 list and links to reviews and 'where to watch' are from the [New
 York Times][100]. The data were scraped from the web page using _R_ and the
 [xml2][] and [dplyr][] packages.
 
-Director, writer, and actor information is from [TMDB][] (The Movie Database),
-with JSON responses transformed using [rjsoncons][]. This information was
-obtained using the TMDB API but is not endorsed or certified by TMDB.
+Director, writer, actor and genre information is from [TMDB][] (The Movie
+Database), with JSON responses transformed using [rjsoncons][]. This information
+was obtained using the TMDB API but is not endorsed or certified by TMDB.
 
 <!-- prettier-ignore -->
 [100]: https://www.nytimes.com/interactive/2025/movies/best-movies-21st-century.html
