@@ -84,92 +84,87 @@ const select_movie_info = (rank) => {
     );
 }
 
-const select_tmdb_genre = (rank) => {
-    return db.selectObjects(`
-        SELECT
-            genre.name AS name,
-            (
-                SELECT COUNT(*)
-                FROM tmdb_genre AS alias
-                WHERE alias.name = genre.name
-            ) AS count
-        FROM tmdb_genre AS genre
-        WHERE genre.rank = ?;`,
-        [rank]
-    );
-}
-
-const select_tmdb_actors = (rank) => {
-    return db.selectObjects(`
-        SELECT
-            -- All actors for this movie, with their movie counts
-            actor.name AS "name",
-            actor.character AS character,
-            (
-                -- Count number of movies with this actor in top 6 billed roles
-                SELECT COUNT(*)
-                FROM tmdb_cast AS alias
-                WHERE
-                    (alias.name = actor.name)
-                    AND (alias."order" < 6)
-            ) AS movie_count
-        FROM tmdb_cast AS actor
-        WHERE (actor.rank = ?) AND (actor."order" < 6);`,
-        [rank]
-    );
-}
-
-const select_tmdb_crew = (role, rank) => {
-    const job = {
-        director: "('Director')",
-        screenwriter: "('Screenplay', 'Writer')"
+const select_and_count = (role, rank) => {
+    const config = {
+        genre: {
+            table: "tmdb_genre",
+            table_and: "1=1",
+            alias_and: "(1=1)",
+            select: "",
+        },
+        actor: {
+            table: "tmdb_cast",
+            table_and: '(tbl."order" < 6)',
+            alias_and: '(alias."order" < 6)',
+            select: "tbl.character AS character,",
+        },
+        director: {
+            table: "tmdb_crew",
+            table_and: "(tbl.job IN ('Director'))",
+            alias_and: "(alias.job IN ('Director'))",
+            select: "",
+        },
+        screenwriter: {
+            table: "tmdb_crew",
+            table_and: "(tbl.job IN ('Screenplay', 'Writer'))",
+            alias_and: "(alias.job IN ('Screenplay', 'Writer'))",
+            select: "",
+        },
     }[role];
 
-    return db.selectObjects(`
+    const { table, select, table_and, alias_and } = config;
+
+    const sql = `
         SELECT
-            -- All people for this movie, with their movie counts
-            crew.name AS name,
+            tbl.name AS "name",
+            ${select}
             (
-                -- Count number of movies of each person
                 SELECT COUNT(*)
-                FROM tmdb_crew AS alias
-                WHERE (alias.name = crew.name) AND (alias.job IN ${job})
-            ) AS movie_count
-        FROM tmdb_crew AS crew
-        WHERE (crew.rank = ?) AND (crew.job IN ${job});`,
-        [rank]
-    );
-};
+                FROM ${table} AS alias
+                WHERE (alias.name = tbl.name) AND ${alias_and}
+            ) AS count
+        FROM ${table} AS tbl
+        WHERE (tbl.rank = ?) AND ${table_and};`
+    return db.selectObjects(sql, [rank]);
+}
 
 const select_movie_rank = (role, name) => {
-    const table = {
-        'genre': 'tmdb_genre',
-        'actor': 'tmdb_cast',
-        'director': 'tmdb_crew',
-        'screenwriter': 'tmdb_crew'
+    const config = {
+        'genre': {
+            table: 'tmdb_genre',
+            table_and: '1=1',
+        },
+        'actor': {
+            table: 'tmdb_cast',
+            table_and: '("order" < 6)',
+        },
+        'director': {
+            table: 'tmdb_crew',
+            table_and: "(job IN ('Director'))",
+        },
+        'screenwriter': {
+            table: 'tmdb_crew',
+            table_and: "(job IN ('Screenplay', 'Writer'))",
+        }
     }[role];
-    const and = {
-        'genre': '1=1',
-        'actor': '("order" < 6)',
-        'director': "(job IN ('Director'))",
-        'screenwriter': "(job IN ('Screenplay', 'Writer'))"
-    }[role];
+
+    const { table, table_and } = config;
 
     return db.selectValues(`
         SELECT DISTINCT(rank)
-        FROM ${table}
-        WHERE (name = ?) AND ${and};`,
+        FROM ${table} AS tbl
+        WHERE (name = ?) AND ${table_and};`,
         [name]
     );
 }
 
 // DOM
 
-const dom_create_genre = (genre) => {
+const dom_create_label = (role, item) => {
     const name = document.createElement('span');
-    name.className = 'genre';
-    name.textContent = genre.name ;
-    if (genre.count > 1) {
+    name.className = role;
+    name.textContent = item.name ;
+    if (item.count > 1) {
         name.classList.add('multiple-movies');
     }
     return name.outerHTML;
@@ -179,7 +174,7 @@ const dom_create_actor = (actor) => {
     const name = document.createElement('span');
     name.className = 'actor';
     name.textContent = actor.name ;
-    if (actor.movie_count > 1) {
+    if (actor.count > 1) {
         name.classList.add('multiple-movies');
     }
 
@@ -188,16 +183,6 @@ const dom_create_actor = (actor) => {
     span.appendChild(document.createTextNode(` (${actor.character})`));
     return span.innerHTML;
 };
-
-const dom_create_crew = (job, person) => {
-    const name = document.createElement('span');
-    name.className = job;
-    name.textContent = person.name ;
-    if (person.movie_count > 1) {
-        name.classList.add('multiple-movies');
-    }
-    return name.outerHTML;
-}
 
 const dom_datatable_click_event = (event, datatable) => {
     const target = event.target.closest("tr");
@@ -211,17 +196,17 @@ const dom_datatable_click_event = (event, datatable) => {
         document.getElementById(key).innerHTML = info[key] || "None yet.";
     }
 
-    const genre = select_tmdb_genre(rank)
-        .map((genre) => dom_create_genre(genre))
+    const genre = select_and_count('genre', rank)
+        .map((genre) => dom_create_label('genre', genre))
         .join(", ");
-    const actors = select_tmdb_actors(rank)
+    const actors = select_and_count('actor', rank)
         .map((actor) => dom_create_actor(actor))
         .join(", ");
-    const directors = select_tmdb_crew('director', rank)
-        .map((person) => dom_create_crew('director', person))
+    const directors = select_and_count('director', rank)
+        .map((person) => dom_create_label('director', person))
         .join(", ");
-    const screenwriters = select_tmdb_crew('screenwriter', rank)
-        .map((person) => dom_create_crew('screenwriter', person))
+    const screenwriters = select_and_count('screenwriter', rank)
+        .map((person) => dom_create_label('screenwriter', person))
         .join(", ");
     document.getElementById("genre").innerHTML = genre || "Unknown";
     document.getElementById("actors").innerHTML = actors;

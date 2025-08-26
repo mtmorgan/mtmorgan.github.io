@@ -39,13 +39,11 @@ movies the person participates in; clicking again reverts to the full list.
         <tr>
             <td colspan="2" style="text-align:left;">
                 <small>Titles and links are from the New York Times.
-                <br />
-                &#128175; Top 100
-                &#128196; Review
-                &#128065; Where to watch
-                <br />
-                &check; We've seen it
-                &#9989; Our notes
+                &#128175;&nbsp;Top 100
+                &#128196;&nbsp;Review
+                &#128065;&nbsp;Where to watch.
+                &check;&nbsp;Watched
+                &#9989;&nbsp;Our notes.
                 </small>
             </td>
         </tr>
