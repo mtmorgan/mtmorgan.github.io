@@ -39,13 +39,11 @@ movies the person participates in; clicking again reverts to the full list.
         <tr>
             <td colspan="2" style="text-align:left;">
                 <small>Titles and links are from the New York Times.
-                <br />
-                &#128175; Top 100
-                &#128196; Review
-                &#128065; Where to watch
-                <br />
-                &check; We've seen it
-                &#9989; Our notes
+                &#128175;&nbsp;Top 100
+                &#128196;&nbsp;Review
+                &#128065;&nbsp;Where to watch.
+                &check;&nbsp;Watched
+                &#9989;&nbsp;Our notes.
                 </small>
             </td>
         </tr>
@@ -55,7 +53,9 @@ movies the person participates in; clicking again reverts to the full list.
 <p></p>
 
 _<span id="title"></span>_ (<span id = "release_date"></span>) --
-<span id="overview"></span> Popularity: <span id="popularity"></span>.
+<span id="overview"></span>
+Genre: <span id="genre"></span>.
+Popularity: <span id="popularity"></span>.
 
 Directed by <span id="directors"></span>. Screenplay / writing by
 <span id="screenwriters"></span>.
@@ -86,6 +86,8 @@ Dragon_, _Spirited Away_, _The Royal Tenenbaums_, _Superbad_.
 
 Groundhog day: _Mulholland Drive_, _Eternal Sunshine of the Spotless Mind_.
 
+Animation: _Spirited Away_, _Wall-E_, _Up_.
+
 <script src="https://cdn.datatables.net/1.13.3/js/importmap.js"></script>
 <script type="module" src="movies.js"></script>
 
@@ -111,9 +113,9 @@ The top 100 list and links to reviews and 'where to watch' are from the [New
 York Times][100]. The data were scraped from the web page using _R_ and the
 [xml2][] and [dplyr][] packages.
 
-Director, writer, and actor information is from [TMDB][] (The Movie Database).
-This information was obtained using the TMDB API but is not endorsed or
-certified by TMDB.
+Director, writer, actor and genre information is from [TMDB][] (The Movie
+Database), with JSON responses transformed using [rjsoncons][]. This information
+was obtained using the TMDB API but is not endorsed or certified by TMDB.
 
 <!-- prettier-ignore -->
 [100]: https://www.nytimes.com/interactive/2025/movies/best-movies-21st-century.html
@@ -121,4 +123,5 @@ certified by TMDB.
 [DataTables]: https://datatables.net/
 [xml2]: https://xml2.r-lib.org/
 [dplyr]: https://dplyr.tidyverse.org/
+[rjsoncons]: https://mtmorgan.github.io/rjsoncons
 [TMDB]: https://www.themoviedb.org/
