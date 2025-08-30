@@ -54,37 +54,42 @@ initializeSQLite();
 
 // SQL queries
 
-const select_all_movies = () => {
-    return db.selectObjects(`
-        SELECT
-            movie.*,
-            notes.watched AS watched,
-            notes.notes AS notes
-        FROM movie
-        LEFT JOIN notes
-            ON movie.rank = notes.rank
-        ORDER BY movie.rank`
-    );
+const select_all_movies = async () => {
+    return await db.exec({
+        sql: `
+            SELECT
+                movie.*,
+                notes.watched AS watched,
+                notes.notes AS notes
+            FROM movie
+            LEFT JOIN notes
+                ON movie.rank = notes.rank
+            ORDER BY movie.rank`,
+        rowMode: 'object'
+    });
 }
 
-const select_movie_info = (rank) => {
-    return db.selectObject(`
-        SELECT
-            movie.title_text AS title,
-            notes.notes AS notes,
-            strftime('%Y', tmdb_movie.release_date) AS release_date,
-            tmdb_movie.overview AS overview,
-            printf('%.3g', tmdb_movie.popularity) AS popularity
-        FROM movie
-        LEFT JOIN notes
-            ON movie.rank = notes.rank
-        LEFT JOIN tmdb_movie
-            ON movie.rank = tmdb_movie.rank
-        WHERE movie.rank = ?;`, [rank]
-    );
+const select_movie_info = async (rank) => {
+    return await db.exec({
+        sql: `
+            SELECT
+                movie.title_text AS title,
+                notes.notes AS notes,
+                strftime('%Y', tmdb_movie.release_date) AS release_date,
+                tmdb_movie.overview AS overview,
+                printf('%.3g', tmdb_movie.popularity) AS popularity
+            FROM movie
+            LEFT JOIN notes
+                ON movie.rank = notes.rank
+            LEFT JOIN tmdb_movie
+                ON movie.rank = tmdb_movie.rank
+            WHERE movie.rank = ?;`,
+        bind: [rank],
+        rowMode: 'object'
+    })[0];
 }
 
-const select_and_count = (role, rank) => {
+const select_and_count = async (role, rank) => {
     const config = {
         genre: {
             table: "tmdb_genre",
@@ -114,21 +119,24 @@ const select_and_count = (role, rank) => {
 
     const { table, select, table_and, alias_and } = config;
 
-    const sql = `
-        SELECT
-            tbl.name AS "name",
-            ${select}
-            (
-                SELECT COUNT(*)
-                FROM ${table} AS alias
-                WHERE (alias.name = tbl.name) AND ${alias_and}
-            ) AS count
-        FROM ${table} AS tbl
-        WHERE (tbl.rank = ?) AND ${table_and};`
-    return db.selectObjects(sql, [rank]);
+    return await db.exec({
+        sql: `
+            SELECT
+                tbl.name AS "name",
+                ${select}
+                (
+                    SELECT COUNT(*)
+                    FROM ${table} AS alias
+                    WHERE (alias.name = tbl.name) AND ${alias_and}
+                ) AS count
+            FROM ${table} AS tbl
+            WHERE (tbl.rank = ?) AND ${table_and};`,
+        bind: [rank],
+        rowMode: 'object',
+    });
 }
 
-const select_movie_rank = (role, name) => {
+const select_movie_rank = async (role, name) => {
     const config = {
         'genre': {
             table: 'tmdb_genre',
@@ -150,12 +158,14 @@ const select_movie_rank = (role, name) => {
 
     const { table, table_and } = config;
 
-    return db.selectValues(`
-        SELECT DISTINCT(rank)
-        FROM ${table} AS tbl
-        WHERE (name = ?) AND ${table_and};`,
-        [name]
-    );
+    return await db.exec({
+        sql: `
+            SELECT DISTINCT(rank)
+            FROM ${table} AS tbl
+            WHERE (name = ?) AND ${table_and};`,
+        bind: [name],
+        rowMode: 'array'
+    }).flat();
 }
 
 // DOM
@@ -184,30 +194,41 @@ const dom_create_actor = (actor) => {
     return span.innerHTML;
 };
 
-const dom_datatable_click_event = (event, datatable) => {
+const dom_datatable_click_event = async (event, datatable) => {
     const target = event.target.closest("tr");
     if (!target) {
         return; // Click was outside a row
     }
     const rank = datatable.row(target).data().rank;
 
-    const info = select_movie_info(rank);
+    // Fetch movie details in parallel
+    const [info, genre_data, actor_data, director_data, screenwriter_data] =
+        await Promise.all([
+            select_movie_info(rank),
+            select_and_count('genre', rank),
+            select_and_count('actor', rank),
+            select_and_count('director', rank),
+            select_and_count('screenwriter', rank)
+        ]);
+
+    // Process fetched data
+    const genre = genre_data
+        .map((genre) => dom_create_label('genre', genre))
+        .join(", ");
+    const actors = actor_data
+        .map((actor) => dom_create_actor(actor))
+        .join(", ");
+    const directors = director_data
+        .map((person) => dom_create_label('director', person))
+        .join(", ");
+    const screenwriters = screenwriter_data
+        .map((person) => dom_create_label('screenwriter', person))
+        .join(", ");
+
+    // Update DOM elements
     for (const key in info) {
         document.getElementById(key).innerHTML = info[key] || "None yet.";
     }
-
-    const genre = select_and_count('genre', rank)
-        .map((genre) => dom_create_label('genre', genre))
-        .join(", ");
-    const actors = select_and_count('actor', rank)
-        .map((actor) => dom_create_actor(actor))
-        .join(", ");
-    const directors = select_and_count('director', rank)
-        .map((person) => dom_create_label('director', person))
-        .join(", ");
-    const screenwriters = select_and_count('screenwriter', rank)
-        .map((person) => dom_create_label('screenwriter', person))
-        .join(", ");
     document.getElementById("genre").innerHTML = genre || "Unknown";
     document.getElementById("actors").innerHTML = actors;
     document.getElementById("directors").innerHTML = directors;
@@ -222,7 +243,7 @@ const dom_datatable_click_event = (event, datatable) => {
     });
 }
 
-const dom_multiple_movies_click_event = (event, datatable) => {
+const dom_multiple_movies_click_event = async (event, datatable) => {
     event.stopPropagation(); // Prevent triggering row click event
 
     const wasActive = event.target.classList.contains('active');
@@ -236,7 +257,7 @@ const dom_multiple_movies_click_event = (event, datatable) => {
         // Set active class on clicked element
         event.target.classList.toggle('active');
         // Update regex to match any of the ids of the active element
-        const ranks = select_movie_rank(
+        const ranks = await select_movie_rank(
             event.target.classList[0],
             event.target.textContent
         );
@@ -270,10 +291,11 @@ const init_datatable = () => {
     });
 };
 
-const init_datatable_movies = () => {
+const init_datatable_movies = async () => {
     log('Updating DataTable with movies data...');
     const table = document.getElementById('movies-table');
-    const movie_data = select_all_movies().map((movie) => {
+    const all_movies = await select_all_movies();
+    const movie_data = all_movies.map((movie) => {
         let links =
            `<a href="${movie.share_url}" target="_blank">&#128175;</a>&nbsp;` +
            `<a href="${movie.review_url}" target="_blank">&#128196;</a>&nbsp;`;
