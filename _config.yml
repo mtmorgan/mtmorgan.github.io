@@ -25,7 +25,7 @@ description: >- # this means to ignore newlines until "baseurl:"
   expertise in R. Martin originally trained as a biologist interested
   in the evolution of plant reproductive morphology.
 baseurl: "" # the subpath of your site, e.g. /blog
-url: "https://mtmorgan.github.iio" # the base hostname & protocol for your site, e.g. http://example.com
+url: "https://mtmorgan.github.io" # the base hostname & protocol for your site, e.g. http://example.com
 github_username:  mtmorgan
 
 # Build settings
