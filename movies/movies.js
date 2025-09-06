@@ -1,6 +1,6 @@
-import sqlite3InitModule from "./assets/node_modules/@sqlite.org/sqlite-wasm/index.mjs";
 import DataTable from 'datatables.net';
 import 'datatables.net-select';
+import { sendCommand, awaitReady } from './db-manager.js';
 
 const log = console.log;
 const error = console.error;
@@ -9,53 +9,53 @@ const error = console.error;
 
 let db = null;
 
-const create_db = (sqlite3, arrayBuffer) => {
-    // Created database from ArrayBuffer
-    const p = sqlite3.wasm.allocFromTypedArray(arrayBuffer);
-    db = new sqlite3.oo1.DB(); // Create at global scope
-    const rc = sqlite3.capi.sqlite3_deserialize(
-        db.pointer, 'main', p, arrayBuffer.byteLength, arrayBuffer.byteLength,
-        sqlite3.capi.SQLITE_DESERIALIZE_FREEONCLOSE
-        // Optionally:
-        //    | sqlite3.capi.SQLITE_DESERIALIZE_RESIZEABLE
-    );
-    db.checkRc(rc);
-    log('Database created successfully:', typeof db);
-}
+// const create_db = (sqlite3, arrayBuffer) => {
+//     // Created database from ArrayBuffer
+//     const p = sqlite3.wasm.allocFromTypedArray(arrayBuffer);
+//     db = new sqlite3.oo1.DB(); // Create at global scope
+//     const rc = sqlite3.capi.sqlite3_deserialize(
+//         db.pointer, 'main', p, arrayBuffer.byteLength, arrayBuffer.byteLength,
+//         sqlite3.capi.SQLITE_DESERIALIZE_FREEONCLOSE
+//         // Optionally:
+//         //    | sqlite3.capi.SQLITE_DESERIALIZE_RESIZEABLE
+//     );
+//     db.checkRc(rc);
+//     log('Database created successfully:', typeof db);
+// }
 
-const start = (sqlite3) => {
-    log('Starting SQLite3 version', sqlite3.version.libVersion);
+// const start = (sqlite3) => {
+//     log('Starting SQLite3 version', sqlite3.version.libVersion);
 
-    // Fetch the database file as arrayBuffer
-    fetch('/movies/assets/movies.db')
-        .then(res => res.arrayBuffer())
-        .then(arrayBuffer => {
-            log('Creating database from ArrayBuffer:', arrayBuffer.byteLength,
-                'bytes'
-            );
-            create_db(sqlite3, arrayBuffer);
-        });
-};
+//     // Fetch the database file as arrayBuffer
+//     fetch('/movies/assets/movies.db')
+//         .then(res => res.arrayBuffer())
+//         .then(arrayBuffer => {
+//             log('Creating database from ArrayBuffer:', arrayBuffer.byteLength,
+//                 'bytes'
+//             );
+//             create_db(sqlite3, arrayBuffer);
+//         });
+// };
 
-const initializeSQLite = async () => {
-    try {
-        log('Loading and initializing SQLite3 module...');
-        const sqlite3 = await sqlite3InitModule({
-            print: log,
-            printErr: error,
-        });
-        start(sqlite3);
-    } catch (err) {
-        error('Initialization error:', err.name, err.message);
-    }
-}
+// const initializeSQLite = async () => {
+//     try {
+//         log('Loading and initializing SQLite3 module...');
+//         const sqlite3 = await sqlite3InitModule({
+//             print: log,
+//             printErr: error,
+//         });
+//         start(sqlite3);
+//     } catch (err) {
+//         error('Initialization error:', err.name, err.message);
+//     }
+// }
 
-initializeSQLite();
+// initializeSQLite();
 
 // SQL queries
 
 const select_all_movies = async () => {
-    return await db.exec({
+    return await sendCommand('exec', {
         sql: `
             SELECT
                 movie.*,
@@ -70,7 +70,7 @@ const select_all_movies = async () => {
 }
 
 const select_movie_info = async (rank) => {
-    return await db.exec({
+    const result = await sendCommand('exec', {
         sql: `
             SELECT
                 movie.title_text AS title,
@@ -86,7 +86,8 @@ const select_movie_info = async (rank) => {
             WHERE movie.rank = ?;`,
         bind: [rank],
         rowMode: 'object'
-    })[0];
+    });
+    return result[0];
 }
 
 const select_and_count = async (role, rank) => {
@@ -119,7 +120,7 @@ const select_and_count = async (role, rank) => {
 
     const { table, select, table_and, alias_and } = config;
 
-    return await db.exec({
+    return await sendCommand('exec', {
         sql: `
             SELECT
                 tbl.name AS "name",
@@ -158,7 +159,7 @@ const select_movie_rank = async (role, name) => {
 
     const { table, table_and } = config;
 
-    return await db.exec({
+    return await sendCommand('exec', {
         sql: `
             SELECT DISTINCT(rank)
             FROM ${table} AS tbl
@@ -269,26 +270,44 @@ const dom_multiple_movies_click_event = async (event, datatable) => {
 
 // Initialize DataTable on DOMContentLoaded
 
-const wait_for_db = () => {
-    // Wait for the database to be initialized
-    return new Promise(resolve => {
-        const checkInterval = setInterval(() => {
-            log('Checking if database is ready...');
-            if (db !== null) {
-                clearInterval(checkInterval);
-                resolve(db);
-            }
-        }, 100);
-    });
-}
+// const wait_for_db = () => {
+//     // Wait for the database to be initialized
+//     return new Promise(resolve => {
+//         const checkInterval = setInterval(() => {
+//             log('Checking if database is ready...');
+//             if (db !== null) {
+//                 clearInterval(checkInterval);
+//                 resolve(db);
+//             }
+//         }, 100);
+//     });
+// }
 
-const init_datatable = () => {
-    wait_for_db().then(() => {
+const init_app = async () => {
+    try {
+        log("Waiting for worker to be ready...");
+        await awaitReady();
+
+        const exists = await sendCommand('db-exists');
+        log(`Does database exist? ${exists}`);
+
+        if (!exists) {
+            const dbFile = 'movies.db';
+            log(`Importing '${dbFile}'`);
+            const arrayBuffer = await fetch(`/movies/assets/${dbFile}`)
+                .then(response => response.arrayBuffer());
+
+            log("Sending database file to worker...");
+            await sendCommand('db-import', {
+                arrayBuffer: arrayBuffer
+            }, [arrayBuffer]);
+        }
+
         log('Database is ready, updating DataTables...');
-        init_datatable_movies ();
-    }).catch(err => {
+        await init_datatable_movies();
+    } catch (err) {
         error('Error initializing database / datatable:', err);
-    });
+    };
 };
 
 const init_datatable_movies = async () => {
@@ -342,4 +361,4 @@ const init_datatable_movies = async () => {
     row.node().click(); // Trigger click on first row to populate details
 };
 
-document.addEventListener("DOMContentLoaded", init_datatable);
+document.addEventListener("DOMContentLoaded", init_app);
