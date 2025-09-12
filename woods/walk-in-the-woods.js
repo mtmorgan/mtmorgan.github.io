@@ -495,7 +495,6 @@ const sketch_walk_in_the_woods_ornaments = (p5) => {
 
     function oscilate(p5) {
         const rotation = p5.frameCount / Math.PI / 10;
-        console.log(rotation);
         p5.rotateY(rotation);
     }
 
