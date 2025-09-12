@@ -159,14 +159,15 @@ const select_movie_rank = async (role, name) => {
 
     const { table, table_and } = config;
 
-    return await sendCommand('exec', {
+    const response = await sendCommand('exec', {
         sql: `
             SELECT DISTINCT(rank)
             FROM ${table} AS tbl
             WHERE (name = ?) AND ${table_and};`,
         bind: [name],
         rowMode: 'array'
-    }).flat();
+    });
+    return response.flat();
 }
 
 // DOM
