@@ -2,7 +2,9 @@
 title: "A Walk in the Woods"
 layout: page
 date: 2024-12-11
-css: /assets/leaflet/leaflet.css
+css: 
+- /assets/leaflet/leaflet.css
+- /assets/treebark/treebark.css
 ---
 
 # The woods
@@ -38,6 +40,68 @@ photographs.
 
 [hazel]: https://en.wikipedia.org/wiki/Hurricane_Hazel
 
+# Trees
+
+[The Tree Atlas: South Central region][tree-atlas] from the Ontario
+Ministry of Natural Resources introduces the native trees of our
+region. The site is presented by leaf, but I rearranged it by <!-- -->
+[tree bark][tree-bark]. Reviewing these can help identify trees in the images
+below. Common trees on our property incldue:
+
+<div class="treebark-container">
+<figure>
+  <a href="https://www.ontario.ca/page/american-beech">
+    <img alt="Close up of American beech bark" src="https://www.ontario.ca/files/2023-10/mnr-srb-americanbeech-bark-200x200-2023-10-17.jpg" />
+  </a>
+  <figcaption>
+    <a href="https://www.ontario.ca/page/american-beech">American beech</a>
+  </figcaption>
+</figure>
+<figure>
+  <a href="https://www.ontario.ca/page/balsam-fir">
+    <img alt="Close up of balsam fir bark" src="https://www.ontario.ca/files/2023-10/mnr-srb-balsamfir-bark-200x200-2023-10-17.jpg" />
+  </a>
+  <figcaption>
+    <a href="https://www.ontario.ca/page/balsam-fir">Balsam fir</a>
+  </figcaption>
+</figure>
+<figure>
+  <a href="https://www.ontario.ca/page/eastern-hemlock">
+    <img alt="Close up of eastern hemlock bark" src="https://www.ontario.ca/files/2023-07/mnr-srb-easternhemlock-bark-200x200-2023-07-27.jpg" />
+  </a>
+  <figcaption>
+    <a href="https://www.ontario.ca/page/eastern-hemlock">Eastern hemlock</a>
+  </figcaption>
+</figure>
+<figure>
+  <a href="https://www.ontario.ca/page/eastern-white-cedar">
+    <img alt="Close up of eastern white cedar bark" src="https://www.ontario.ca/files/2023-10/mnr-srb-easternwhitecedar-bark-200x200-2023-10-17.jpg" />
+  </a>
+  <figcaption>
+    <a href="https://www.ontario.ca/page/eastern-white-cedar">Eastern white cedar</a>
+  </figcaption>
+</figure>
+<figure>
+  <a href="https://www.ontario.ca/page/red-maple">
+    <img alt="Close up of red maple bark" src="https://www.ontario.ca/files/2023-10/mnr-srb-redmaple-bark-200x200-2023-10-23.jpg" />
+  </a>
+  <figcaption>
+    <a href="https://www.ontario.ca/page/red-maple">Red maple</a>
+  </figcaption>
+</figure>
+<figure>
+  <a href="https://www.ontario.ca/page/red-pine">
+    <img alt="Close up of red pine bark" src="https://www.ontario.ca/files/2023-10/mnr-srb-redpine-bark-200x200-2023-10-17.jpg" />
+  </a>
+  <figcaption>
+    <a href="https://www.ontario.ca/page/red-pine">Red pine</a>
+  </figcaption>
+</figure>
+</div>
+
+[tree-atlas]: https://www.ontario.ca/page/tree-atlas/ontario-southcentral
+[tree-bark]: ./treebark.html
+
 # Walking
 
 The trees in the woods have all kinds of different bark. It was fun to
@@ -72,16 +136,16 @@ to keep them more separate.
 
 <div id="sketch-walk-in-the-woods-again"></div>
 
-Ornaments
+Ornaments -- under development.
 
 <div id="sketch-walk-in-the-woods-ornaments"></div>
 <script type="module" src="./walk-in-the-woods.js"></script>
 
 
-# Clustered
+<!-- # Clustered -->
 
-<div id="clusters"></div>
-<script type="module" src="./clusters.js"></script>
+<!-- <div id="clusters"></div> -->
+<!-- <script type="module" src="./clusters.js"></script> -->
 
 # Notes
 
