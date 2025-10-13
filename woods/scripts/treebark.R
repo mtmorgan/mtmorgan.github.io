@@ -79,7 +79,7 @@ trees <-
 
 template <- '{{#taxa}}<figure>
   <a href="{{base_url}}{{path}}">
-    <img alt="{{alt}}" src="{{src}}" />
+    <img alt="{{alt}}" src="{{src}}" loading="lazy"/>
   </a>
   <figcaption>
     <a href="{{base_url}}{{path}}">{{species}}</a>

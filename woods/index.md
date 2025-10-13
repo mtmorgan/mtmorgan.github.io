@@ -51,7 +51,7 @@ below. Common trees on our property incldue:
 <div class="treebark-container">
 <figure>
   <a href="https://www.ontario.ca/page/american-beech">
-    <img alt="Close up of American beech bark" src="https://www.ontario.ca/files/2023-10/mnr-srb-americanbeech-bark-200x200-2023-10-17.jpg" />
+    <img alt="Close up of American beech bark" src="https://www.ontario.ca/files/2023-10/mnr-srb-americanbeech-bark-200x200-2023-10-17.jpg" loading="lazy" />
   </a>
   <figcaption>
     <a href="https://www.ontario.ca/page/american-beech">American beech</a>
@@ -59,7 +59,7 @@ below. Common trees on our property incldue:
 </figure>
 <figure>
   <a href="https://www.ontario.ca/page/balsam-fir">
-    <img alt="Close up of balsam fir bark" src="https://www.ontario.ca/files/2023-10/mnr-srb-balsamfir-bark-200x200-2023-10-17.jpg" />
+    <img alt="Close up of balsam fir bark" src="https://www.ontario.ca/files/2023-10/mnr-srb-balsamfir-bark-200x200-2023-10-17.jpg" loading="lazy" />
   </a>
   <figcaption>
     <a href="https://www.ontario.ca/page/balsam-fir">Balsam fir</a>
@@ -67,7 +67,7 @@ below. Common trees on our property incldue:
 </figure>
 <figure>
   <a href="https://www.ontario.ca/page/eastern-hemlock">
-    <img alt="Close up of eastern hemlock bark" src="https://www.ontario.ca/files/2023-07/mnr-srb-easternhemlock-bark-200x200-2023-07-27.jpg" />
+    <img alt="Close up of eastern hemlock bark" src="https://www.ontario.ca/files/2023-07/mnr-srb-easternhemlock-bark-200x200-2023-07-27.jpg" loading="lazy" />
   </a>
   <figcaption>
     <a href="https://www.ontario.ca/page/eastern-hemlock">Eastern hemlock</a>
@@ -75,7 +75,7 @@ below. Common trees on our property incldue:
 </figure>
 <figure>
   <a href="https://www.ontario.ca/page/eastern-white-cedar">
-    <img alt="Close up of eastern white cedar bark" src="https://www.ontario.ca/files/2023-10/mnr-srb-easternwhitecedar-bark-200x200-2023-10-17.jpg" />
+    <img alt="Close up of eastern white cedar bark" src="https://www.ontario.ca/files/2023-10/mnr-srb-easternwhitecedar-bark-200x200-2023-10-17.jpg" loading="lazy" />
   </a>
   <figcaption>
     <a href="https://www.ontario.ca/page/eastern-white-cedar">Eastern white cedar</a>
@@ -83,7 +83,7 @@ below. Common trees on our property incldue:
 </figure>
 <figure>
   <a href="https://www.ontario.ca/page/red-maple">
-    <img alt="Close up of red maple bark" src="https://www.ontario.ca/files/2023-10/mnr-srb-redmaple-bark-200x200-2023-10-23.jpg" />
+    <img alt="Close up of red maple bark" src="https://www.ontario.ca/files/2023-10/mnr-srb-redmaple-bark-200x200-2023-10-23.jpg" loading="lazy" />
   </a>
   <figcaption>
     <a href="https://www.ontario.ca/page/red-maple">Red maple</a>
@@ -91,7 +91,7 @@ below. Common trees on our property incldue:
 </figure>
 <figure>
   <a href="https://www.ontario.ca/page/red-pine">
-    <img alt="Close up of red pine bark" src="https://www.ontario.ca/files/2023-10/mnr-srb-redpine-bark-200x200-2023-10-17.jpg" />
+    <img alt="Close up of red pine bark" src="https://www.ontario.ca/files/2023-10/mnr-srb-redpine-bark-200x200-2023-10-17.jpg" loading="lazy" />
   </a>
   <figcaption>
     <a href="https://www.ontario.ca/page/red-pine">Red pine</a>
