@@ -1,7 +1,11 @@
+/* Figure display */
+
 .treebark-container {
     display: flex;
     flex-wrap: wrap; /* Figures will be side-by-side on a wide screen */
     gap: 2px; /* Adds space between figures */
+    margin-top: 20px;
+    margin-bottom: 20px;
 }
 
 .treebark-container figure {
@@ -18,3 +22,63 @@
         flex-basis: 100%
     }
 }
+
+/* Filter */
+
+.treebark-container .hidden {
+  display: none;
+}
+
+/* Upvote and sort */
+
+.vote-section {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 5px;
+}
+
+.upvote-btn {
+  background-color: #2e7d32;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.vote-count {
+  font-weight: bold;
+}
+
+/* Dangerous action button */
+
+/* Other button styles */
+
+.dangerous-action-button {
+  /* Accessible red with high contrast white text */
+  background-color: #b30000; /* A dark red */
+  color: #ffffff; /* White text for contrast */
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+  border-radius: 4px;
+
+  /* Add padding to account for the icon */
+  padding-left: 28px;
+  position: relative;
+}
+
+/* Add a visual cue with a Unicode warning icon */
+.dangerous-action-button::before {
+  content: '⚠️'; /* Warning emoji */
+  position: absolute;
+  left: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.dangerous-action-button:hover {
+  background-color: #800000; /* Darken on hover */
+}
+
