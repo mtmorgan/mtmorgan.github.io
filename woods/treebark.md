@@ -16,9 +16,9 @@ Reviewing these can help identify trees during a
   <label for="treebark-search-input">Filter:</label>
   <input type="text" id="treebark-search-input" placeholder="Type to filter..." />
   <br />
-  <label for="treebark-sort-select">Sort by:</label>
+  <label for="treebark-sort-select">Keep sorted by:</label>
   <select id="treebark-sort-select">
-    <option value="treebark-viewed-desc">Viewed</option>
+    <option value="treebark-viewed-desc">Views</option>
     <option value="treebark-title-asc">Title (A-Z)</option>
     <option value="treebark-title-desc">Title (Z-A)</option>
   </select>

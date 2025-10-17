@@ -59,6 +59,13 @@ function handleUpvoteClick(event) {
   // Update the displayed vote count.
   const voteCounter = figure.querySelector('.vote-count');
   voteCounter.textContent = votes[imageId];
+
+  // Optionally, re-sort the images after a vote.
+  const sortSelect = document.querySelector('#treebark-sort-select');
+  if (sortSelect) {
+    const selectedOption = sortSelect.value;
+    sortFigures(selectedOption);
+  }
 }
 
 // Re-sort figures based on vote count or caption.
