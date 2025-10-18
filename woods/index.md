@@ -2,9 +2,9 @@
 title: "A Walk in the Woods"
 layout: page
 date: 2024-12-11
-css: 
+css:
 - /assets/leaflet/leaflet.css
-- /assets/treebark/treebark.css
+- /assets/woods/treebark/treebark.css
 ---
 
 # The woods
@@ -100,7 +100,7 @@ below. Common trees on our property incldue:
 </div>
 
 [tree-atlas]: https://www.ontario.ca/page/tree-atlas/ontario-southcentral
-[tree-bark]: ./treebark.html
+[tree-bark]: /woods/treebark/
 
 # Walking
 

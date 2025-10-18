@@ -2,18 +2,18 @@
 const localStorageKey = 'imageVotes';
 
 // Load existing vote counts from localStorage, or initialize an empty object.
-function getVotes() {
+const getVotes = () => {
   const votes = localStorage.getItem(localStorageKey);
   return votes ? JSON.parse(votes) : {};
 }
 
 // Save the current votes object to localStorage.
-function saveVotes(votes) {
+const saveVotes = (votes) => {
   localStorage.setItem(localStorageKey, JSON.stringify(votes));
 }
 
 // Initialize the vote buttons and counters for all figures.
-function initializeVoting() {
+const  initializeVoting = () => {
   const gallery = document.querySelector('.treebark-container');
   const figures = gallery.querySelectorAll('figure');
   const votes = getVotes();
@@ -47,7 +47,7 @@ function initializeVoting() {
 }
 
 // Handle an upvote click event.
-function handleUpvoteClick(event) {
+const handleUpvoteClick = (event) => {
   const upvoteBtn = event.target;
   const figure = upvoteBtn.closest('figure');
   const imageId = figure.dataset.imageId;
@@ -69,49 +69,50 @@ function handleUpvoteClick(event) {
 }
 
 // Re-sort figures based on vote count or caption.
-function sortFigures(sortOption) {
+
+// Define compare functions
+
+const compareByViewed = (votes, a, b) => {
+  const votesA = votes[a.dataset.imageId] || 0;
+  const votesB = votes[b.dataset.imageId] || 0;
+  return votesB - votesA;
+};
+
+const compareByCaption = (a, b) => {
+  const titleA = a.querySelector('figcaption').textContent.trim().toLowerCase();
+  const titleB = b.querySelector('figcaption').textContent.trim().toLowerCase();
+  return titleA.localeCompare(titleB);
+};
+
+// Sort
+
+const sortFigures = (sortOption) => {
   const gallery = document.querySelector('.treebark-container');
   const figures = Array.from(gallery.querySelectorAll('figure'));
   const votes = getVotes();
 
-  figures.sort((a, b) => {
-    switch (sortOption) {
-      case 'treebark-viewed-desc':
-        const votesA = votes[a.dataset.imageId] || 0;
-        const votesB = votes[b.dataset.imageId] || 0;
-        return votesB - votesA;
-      case 'treebark-title-asc':
-        const titleA = a
-          .querySelector('figcaption')
-          .textContent.trim()
-          .toLowerCase();
-        const titleB = b
-          .querySelector('figcaption')
-          .textContent.trim()
-          .toLowerCase();
-        return titleA.localeCompare(titleB);
-      case 'treebark-title-desc':
-        const descTitleA = a
-          .querySelector('figcaption')
-          .textContent.trim()
-          .toLowerCase();
-        const descTitleB = b
-          .querySelector('figcaption')
-          .textContent.trim()
-          .toLowerCase();
-        return descTitleB.localeCompare(descTitleA);
-      default:
-        return 0; // Default to no sort change
-    }
-  });
+  // Select comparison function
+  let compareFn;
+  switch (sortOption) {
+    case 'treebark-viewed-desc':
+      compareFn = (a, b) => compareByViewed(votes, a, b);
+      break;
+    case 'treebark-title-asc':
+      compareFn = (a, b) => compareByCaption(a, b);
+      break;
+    case 'treebark-title-desc':
+      compareFn = (a, b) => compareByCaption(b, a);
+      break;
+    default:
+      compareFn = (_a, _b) => 0; // Default to no sort change
+  }
 
-  figures.forEach((figure, index) => {
-    figure.style.order = index;
-  });
+  figures.sort(compareFn);
+  figures.forEach((figure, index) => (figure.style.order = index));
 }
 
 // Filter figures
-function filterFigures(searchText) {
+const filterFigures = (searchText) => {
   const gallery = document.querySelector('.treebark-container');
   const figures = gallery.querySelectorAll('figure');
   const searchTerm = searchText.trim().toLowerCase();
@@ -131,7 +132,7 @@ function filterFigures(searchText) {
 }
 
 // Reset counters for all images
-function resetAllCounters() {
+const resetAllCounters = () => {
   // Clear the vote data from localStorage
   localStorage.removeItem(localStorageKey);
 

@@ -3,7 +3,7 @@ title: 'Tree Bark'
 layout: page
 date: 2025-10-12
 css:
-  - /assets/treebark/treebark.css
+  - /assets/woods/treebark/treebark.css
 ---
 
 [The Tree Atlas: South Central region][tree-atlas] from the Ontario
@@ -518,7 +518,7 @@ Reviewing these can help identify trees during a
 <div class="treebark-sort-controls">
   <button id="treebark-reset-votes-button" class="dangerous-action-button">Reset All Counts</button>
 </div>
-<script type="module" src="./treebark.js"></script>
+<script type="module" src="/assets/woods/treebark/treebark.js"></script>
 
 ## Implementation notes
 
@@ -529,4 +529,4 @@ Google Gemini wrote most of the JavaScript and CSS code, although I prompted
 and made revisions.
 
 [tree-atlas]: https://www.ontario.ca/page/tree-atlas/ontario-southcentral
-[woods]: ./index.html
+[woods]: /woods/
