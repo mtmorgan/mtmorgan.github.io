@@ -3,7 +3,7 @@ title: 'Tree Bark'
 layout: page
 date: 2025-10-12
 css:
-  - /assets/treebark/treebark.css
+  - /woods/assets/treebark.css
 ---
 
 [The Tree Atlas: South Central region][tree-atlas] from the Ontario
