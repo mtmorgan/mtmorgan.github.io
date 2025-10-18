@@ -5,15 +5,15 @@ const localStorageKey = 'imageVotes';
 const getVotes = () => {
   const votes = localStorage.getItem(localStorageKey);
   return votes ? JSON.parse(votes) : {};
-}
+};
 
 // Save the current votes object to localStorage.
 const saveVotes = (votes) => {
   localStorage.setItem(localStorageKey, JSON.stringify(votes));
-}
+};
 
 // Initialize the vote buttons and counters for all figures.
-const  initializeVoting = () => {
+const initializeVoting = () => {
   const gallery = document.querySelector('.treebark-container');
   const figures = gallery.querySelectorAll('figure');
   const votes = getVotes();
@@ -31,10 +31,17 @@ const  initializeVoting = () => {
 
     const voteCounter = document.createElement('span');
     voteCounter.classList.add('vote-count');
+    if (voteCount === 0) voteCounter.classList.add('hidden');
     voteCounter.textContent = voteCount;
+
+    const downvoteButton = document.createElement('button');
+    downvoteButton.classList.add('downvote-btn');
+    if (voteCount === 0) downvoteButton.classList.add('hidden');
+    downvoteButton.textContent = '-';
 
     voteSection.appendChild(upvoteButton);
     voteSection.appendChild(voteCounter);
+    voteSection.appendChild(downvoteButton);
     figure.appendChild(voteSection);
   });
 
@@ -42,9 +49,11 @@ const  initializeVoting = () => {
   gallery.addEventListener('click', (event) => {
     if (event.target.classList.contains('upvote-btn')) {
       handleUpvoteClick(event);
+    } else if (event.target.classList.contains('downvote-btn')) {
+      handleDownvoteClick(event);
     }
   });
-}
+};
 
 // Handle an upvote click event.
 const handleUpvoteClick = (event) => {
@@ -59,6 +68,11 @@ const handleUpvoteClick = (event) => {
   // Update the displayed vote count.
   const voteCounter = figure.querySelector('.vote-count');
   voteCounter.textContent = votes[imageId];
+  voteCounter.classList.remove('hidden');
+
+  // Make sure downvote-button is visible
+  const downvoteBtn = figure.querySelector('.downvote-btn');
+  downvoteBtn.classList.remove('hidden');
 
   // Optionally, re-sort the images after a vote.
   const sortSelect = document.querySelector('#treebark-sort-select');
@@ -66,7 +80,35 @@ const handleUpvoteClick = (event) => {
     const selectedOption = sortSelect.value;
     sortFigures(selectedOption);
   }
-}
+};
+
+// Handle a down-vote click event.
+const handleDownvoteClick = (event) => {
+  const downvoteBtn = event.target;
+  const figure = downvoteBtn.closest('figure');
+  const imageId = figure.dataset.imageId;
+
+  const votes = getVotes();
+  votes[imageId] = votes[imageId] - 1;
+  saveVotes(votes);
+
+  // Update the displayed vote count.
+  const voteCounter = figure.querySelector('.vote-count');
+  voteCounter.textContent = votes[imageId];
+
+  // Update button visibility
+  if (votes[imageId] === 0) {
+    voteCounter.classList.add('hidden');
+    downvoteBtn.classList.add('hidden');
+  }
+
+  // Optionally, re-sort the images after a vote.
+  const sortSelect = document.querySelector('#treebark-sort-select');
+  if (sortSelect) {
+    const selectedOption = sortSelect.value;
+    sortFigures(selectedOption);
+  }
+};
 
 // Re-sort figures based on vote count or caption.
 
@@ -109,7 +151,7 @@ const sortFigures = (sortOption) => {
 
   figures.sort(compareFn);
   figures.forEach((figure, index) => (figure.style.order = index));
-}
+};
 
 // Filter figures
 const filterFigures = (searchText) => {
@@ -129,7 +171,7 @@ const filterFigures = (searchText) => {
       figure.classList.add('hidden');
     }
   });
-}
+};
 
 // Reset counters for all images
 const resetAllCounters = () => {
@@ -147,7 +189,7 @@ const resetAllCounters = () => {
   figures.forEach((figure) => {
     figure.style.order = 0;
   });
-}
+};
 
 // Run this function when the page loads to set everything up.
 document.addEventListener('DOMContentLoaded', () => {

@@ -12,6 +12,9 @@ region. The site is presented by leaf, but here they are using bark
 Reviewing these can help identify trees during a
 [Walk in the Woods][woods]. Not all species are present on our property.
 
+Clicking the "That's my tree!" button increments a counter and
+arranges for the most commonly viewed trees to be at the top of the list.
+
 <div class="treebark-sort-controls">
   <label for="treebark-search-input">Filter:</label>
   <input type="text" id="treebark-search-input" placeholder="Type to filter..." />

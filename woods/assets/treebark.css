@@ -29,7 +29,7 @@
   display: none;
 }
 
-/* Upvote and sort */
+/* Upvote, downvote, and sort */
 
 .vote-section {
   display: flex;
@@ -41,10 +41,19 @@
 .upvote-btn {
   background-color: #2e7d32;
   color: white;
-  border: none;
-  padding: 5px 10px;
+  padding: 4px 8px;
   cursor: pointer;
   border-radius: 4px;
+  border-width: thin;
+}
+
+.downvote-btn {
+  background-color: white;
+  color: black;
+  padding: 4px 8px;
+  cursor: pointer;
+  border-radius: 4px;
+  border-width: thin
 }
 
 .vote-count {
