@@ -162,6 +162,8 @@ document.addEventListener('DOMContentLoaded', () => {
       const selectedOption = sortSelect.value;
       sortFigures(selectedOption);
     });
+    // Sort figures when page loaded
+    sortFigures(sortSelect.value);
   }
 
   if (searchInput) {
