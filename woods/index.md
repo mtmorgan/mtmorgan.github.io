@@ -2,9 +2,9 @@
 title: "A Walk in the Woods"
 layout: page
 date: 2024-12-11
-css: 
+css:
 - /assets/leaflet/leaflet.css
-- /assets/treebark/treebark.css
+- /woods/assets/treebark.css
 ---
 
 # The woods
