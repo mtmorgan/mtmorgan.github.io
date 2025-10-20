@@ -42,7 +42,7 @@ photographs.
 
 # Trees
 
-[The Tree Atlas: South Central region][tree-atlas] from the Ontario
+[The Tree Atlas: South Central Region][tree-atlas] from the Ontario
 Ministry of Natural Resources introduces the native trees of our
 region. The site is presented by leaf, but I rearranged it by <!-- -->
 [tree bark][tree-bark]. Reviewing these can help identify trees in the images

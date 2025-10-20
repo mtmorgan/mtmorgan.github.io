@@ -7,13 +7,16 @@ css:
 ---
 
 [The Tree Atlas: South Central region][tree-atlas] from the Ontario
-Ministry of Natural Resources introduces the native trees of our
-region. The site is presented by leaf, but here they are using bark
-Reviewing these can help identify trees during a
-[Walk in the Woods][woods]. Not all species are present on our property.
+Ministry of Natural Resources (MNR) introduces the native trees of our
+region. The MNR site emphasizes leaves for identifying trees, but here we use
+bark. Reviewing tree bark can help identify trees during a
+[Walk in the Woods][woods], especially in winter! Not all species are present
+on our property.
 
-Clicking the "That's my tree!" button increments a counter and
-arranges for the most commonly viewed trees to be at the top of the list.
+Click on an image to learn more about a tree from the Ministry of Natural
+Resources. Click "That's my tree!" to increment a counter and arrange for
+viewed trees to be at the top of the list; this makes it easy to learn common
+trees.
 
 <div class="treebark-sort-controls">
   <label for="treebark-search-input">Filter:</label>
