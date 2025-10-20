@@ -74,10 +74,15 @@ common_six <- c(
 )
 trees <-
     left_join(tree_atlas, tree_info, by = "species") |>
-    mutate(common_six = species %in% common_six) |>
+    mutate(
+        common_six = species %in% common_six,
+        base_url = base_url,
+        id = row_number()
+    )
+
     bind_cols(base_url = base_url)
 
-template <- '{{#taxa}}<figure>
+template <- '{{#taxa}}<figure data-image-id="{{id}}">
   <a href="{{base_url}}{{path}}">
     <img alt="{{alt}}" src="{{src}}" loading="lazy"/>
   </a>
