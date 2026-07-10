@@ -13,7 +13,7 @@
     addEventListener('fetch', (e) => {
       const { request: r } = e;
       // Skip isolation for the birdcafe path
-      if (r.url.includes('/birdcafe/')) return;
+      if (r.url.includes('/birdcafe/') || r.url.includes('/treebark/')) return;
 
       if (r.cache === 'only-if-cached' && r.mode !== 'same-origin') return;
       e.respondWith(
